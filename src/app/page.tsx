@@ -32,7 +32,7 @@ export default function HomePage(){
                     {(data)=>{
                         return (
                             <div className={"flex flex-col justify-end items-center p-4 border rounded-2xl  "}>
-                                <div className="grid grid-cols-2 gap-3">
+                                <div className="grid grid-cols-2 gap-3 h-64 overflow-hidden">
                                     <For of={FlickrImageData.filter((item) => {
                                         return item.fileName.startsWith(data.id)
                                     }).slice(0, 4)}>
