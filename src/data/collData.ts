@@ -8,6 +8,7 @@ export type CollDataType = {
     location:string,
     nameKr:string,
     count?:number,
+    family?:string,
     host:string,
 }
 export const CollData:CollDataType[] = [
