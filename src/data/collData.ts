@@ -1,13 +1,13 @@
 export type CollDataType = {
-    seq:number,
+    seq:number|string,
     id:string,
     type:string,
-    collDate:string,
-    collector:string,
+    collDate:string|number,
+    collector:string|number,
     subfamily:string,
     location:string,
     nameKr:string,
-    count?:number,
+    count?:number|string,
     family?:string,
     host:string,
 }
