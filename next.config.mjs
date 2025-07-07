@@ -1,11 +1,11 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   /**
-   * Enable static exports for the App Router.
-   *
-   * @see https://nextjs.org/docs/app/building-your-application/deploying/static-exports
+   * Enable instrumentation for app initialization
    */
-  output: "export",
+  experimental: {
+    instrumentationHook: true,
+  },
 
   /**
    * Set base path. This is usually the slug of your repository.
