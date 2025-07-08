@@ -77,7 +77,6 @@ export async function enrichCollDataWithImages(): Promise<void> {
                     }
                 }
             });
-            console.log(imageFiles)
             // 중복 제거 및 정렬
             specimen.imageFiles = imageFiles;
 

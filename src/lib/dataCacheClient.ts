@@ -12,9 +12,12 @@ interface CacheData {
 export async function getCachedCollectionData(): Promise<CollDataType[]> {
     try {
         // localStorage에서 캐시된 데이터 확인
+        const hash = typeof window === "undefined" ? "" : (window?.document?.location?.hash ?? "")
+        const isRefreshCache =  (hash === "#r") ? true:false;
+        console.log('클라이언트 캐시 상태 조회:', isRefreshCache ? '캐시 강제 갱신' : '캐시 조회');
         const cachedDataString = localStorage.getItem(CACHE_KEY);
         console.log('클라이언트 캐시 조회:', cachedDataString ? '캐시 있음' : '캐시 없음');
-        if (cachedDataString) {
+        if (cachedDataString&&!isRefreshCache) {
             const cachedData: CacheData = JSON.parse(cachedDataString);
             const now = Date.now();
             
@@ -56,10 +59,12 @@ export async function getCachedCollectionData(): Promise<CollDataType[]> {
 }
 
 async function fetchCollectionData(): Promise<CollDataType[]> {
+    console.log('클라이언트에서 API로 데이터 요청');
     const response = await fetch('/api/collection-data');
     if (!response.ok) {
         throw new Error('데이터 가져오기 실패');
     }
+    console.log('클라이언트에서 API로 데이터 가져오기 성공');
     return await response.json();
 }
 
