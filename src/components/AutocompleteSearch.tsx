@@ -91,7 +91,8 @@ export default function AutocompleteSearch({
     onSearch(value);
   };
 
-  const handleSuggestionClick = (suggestion: string) => {
+  const handleSuggestionClick = (suggestion: string|undefined) => {
+    if(!suggestion) return;
     setSearchText(suggestion);
     onSearch(suggestion);
     setShowSuggestions(false);
@@ -166,7 +167,10 @@ export default function AutocompleteSearch({
           {suggestions.map((suggestion, index) => (
             <div
               key={index}
-              ref={el => suggestionRefs.current[index] = el}
+              ref={(el) => {
+                suggestionRefs.current[index] = el;
+                return;
+              }}
               onClick={() => handleSuggestionClick(suggestion)}
               className={`px-4 py-3 cursor-pointer text-gray-700 hover:bg-gray-100 transition-colors ${
                 index === selectedIndex ? 'bg-blue-50 text-blue-700' : ''

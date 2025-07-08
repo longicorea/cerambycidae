@@ -14,8 +14,6 @@ import AutocompleteSearch from "@src/components/AutocompleteSearch";
 function SpecimenImage({ specimen }: { specimen: CollDataType }) {
     const imageUrl = useMemo(()=>{
         const url =  getSpecimenImageUrl(specimen, 'A', 'dorsal');
-        console.log(specimen)
-        console.log(url)
         return url;
 
     },[])
@@ -31,7 +29,7 @@ function SpecimenImage({ specimen }: { specimen: CollDataType }) {
     
     return (
         <img
-            src={`/api/image-proxy?url=${encodeURIComponent(imageUrl)}`}
+            src={imageUrl}
             alt={specimen.name_ko}
             className="w-full h-full object-cover rounded"
             onError={(e) => {

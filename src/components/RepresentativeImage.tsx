@@ -1,7 +1,6 @@
 'use client'
 
 import { useState, useEffect } from "react";
-import { getRepresentativeImageForTaxon } from "@src/lib/imageCache";
 import { getCachedCollectionData } from "@src/lib/dataCacheClient";
 import { CollDataType } from "@src/data/collData";
 
