@@ -1,6 +1,4 @@
-import {CollDataType, DriveImageFileInfo, DriveImageInfo} from "@src/data/collData";
-
-
+import {CollDataType, DriveImageInfo} from "@src/data/collData";
 
 let imageCache: Map<string, DriveImageInfo> = new Map();
 let lastCacheUpdate: Date = new Date(0);
@@ -23,13 +21,6 @@ export async function refreshImageCache(): Promise<void> {
     console.log('Google Drive 이미지 캐시 갱신 시작...');
     
     try {
-        const folderId = process.env.GOOGLE_DRIVE_FOLDER_ID;
-        const apiKey = process.env.GOOGLE_DRIVE_API_KEY;
-        
-        if (!folderId || !apiKey) {
-            console.warn('Google Drive 설정이 누락되었습니다.');
-            return;
-        }
         
         const imageInfos = await fetchR2Images();
         

@@ -2,7 +2,7 @@
 import { CollDataType } from "@src/data/collData";
 
 const CACHE_KEY = 'collection_data_cache';
-const CACHE_EXPIRY_MS = 60 * 1000; // 1분
+const CACHE_EXPIRY_MS = 60 * 60 * 1000; // 60분
 
 interface CacheData {
     data: CollDataType[];

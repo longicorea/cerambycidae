@@ -6,7 +6,6 @@ import { For } from "react-loops";
 import DefaultSection from "@src/components/section/DefaultSection";
 import { CollDataType } from "@src/data/collData";
 import { getCachedCollectionData } from "@src/lib/dataCacheClient";
-import { getSpecimenImageUrl, getSpecimenAllImages } from "@src/lib/imageUtils";
 import Breadcrumb from "@src/components/Breadcrumb";
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 

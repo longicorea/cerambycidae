@@ -64,7 +64,7 @@ export default function FamilyPage({ params }: { params: { family: string } }) {
 
 
                 <h1 className="text-3xl font-bold mb-8 text-center">
-                    {familyName} - Subfamily 목록
+                    {familyName} - Subfamily
                 </h1>
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
