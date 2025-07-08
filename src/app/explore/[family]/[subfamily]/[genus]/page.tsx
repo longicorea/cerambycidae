@@ -7,6 +7,7 @@ import DefaultSection from "@src/components/section/DefaultSection";
 import { CollDataType } from "@src/data/collData";
 import { getCachedCollectionData } from "@src/lib/dataCacheClient";
 import RepresentativeImage from "@src/components/RepresentativeImage";
+import Breadcrumb from "@src/components/Breadcrumb";
 
 function LabelText({label,value}:{label:string,value:string|number}) {
     return (
@@ -75,23 +76,10 @@ export default function GenusPage({ params }: { params: { family: string, subfam
     
     return (
         <DefaultSection>
-            <div className="py-8">
-                <nav className="mb-6 space-x-2">
-                    <Link href="/explore" className="text-blue-600 hover:text-blue-800">
-                        모든 Family
-                    </Link>
-                    <span className="text-gray-500">{'>'}</span>
-                    <Link href={`/explore/${encodeURIComponent(familyName)}`} className="text-blue-600 hover:text-blue-800">
-                        {familyName}
-                    </Link>
-                    <span className="text-gray-500">{'>'}</span>
-                    <Link href={`/explore/${encodeURIComponent(familyName)}/${encodeURIComponent(subfamilyName)}`} className="text-blue-600 hover:text-blue-800">
-                        {subfamilyName}
-                    </Link>
-                    <span className="text-gray-500">{'>'}</span>
-                    <span className="text-gray-700">{genusName}</span>
-                </nav>
-                
+            <div className="py-4">
+                <Breadcrumb familyName={familyName} subfamilyName={subfamilyName} genusName={genusName} />
+
+
                 <h1 className="text-3xl font-bold mb-8 text-center">
                     {genusName} - Species 목록
                 </h1>
@@ -113,19 +101,16 @@ export default function GenusPage({ params }: { params: { family: string, subfam
                                         subfamilyName={subfamilyName}
                                         genusName={genusName}
                                         speciesName={speciesName}
-                                        className="w-full h-48 object-cover"
                                         alt={`${firstItem.genus_name} ${speciesName} 대표 이미지`}
                                     />
-                                    <div className="p-4">
+                                    <div className="p-4 text-center">
                                         <h2 className="text-xl font-semibold text-blue-600 hover:text-blue-800 mb-2">
                                             {firstItem.genus_name} {speciesName}
                                         </h2>
                                         <p className="text-gray-600 mb-1">
-                                            한국명: {firstItem.name_ko}
+                                            {firstItem.name_ko}
                                         </p>
-                                        <p className="text-gray-600">
-                                            {speciesData.length} 표본
-                                        </p>
+
                                     </div>
                                 </Link>
                             );

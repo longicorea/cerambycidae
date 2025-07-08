@@ -7,6 +7,7 @@ import DefaultSection from "@src/components/section/DefaultSection";
 import { CollDataType } from "@src/data/collData";
 import { getCachedCollectionData } from "@src/lib/dataCacheClient";
 import RepresentativeImage from "@src/components/RepresentativeImage";
+import Breadcrumb from "@src/components/Breadcrumb";
 
 export default function SubfamilyPage({ params }: { params: { family: string, subfamily: string } }) {
     const [collData, setCollData] = useState<CollDataType[]>([]);
@@ -61,19 +62,10 @@ export default function SubfamilyPage({ params }: { params: { family: string, su
     
     return (
         <DefaultSection>
-            <div className="py-8">
-                <nav className="mb-6 space-x-2">
-                    <Link href="/explore" className="text-blue-600 hover:text-blue-800">
-                        모든 Family
-                    </Link>
-                    <span className="text-gray-500">{'>'}</span>
-                    <Link href={`/explore/${encodeURIComponent(familyName)}`} className="text-blue-600 hover:text-blue-800">
-                        {familyName}
-                    </Link>
-                    <span className="text-gray-500">{'>'}</span>
-                    <span className="text-gray-700">{subfamilyName}</span>
-                </nav>
-                
+            <div className="py-4">
+                <Breadcrumb familyName={familyName} subfamilyName={subfamilyName} />
+
+
                 <h1 className="text-3xl font-bold mb-8 text-center">
                     {subfamilyName} - Genus 목록
                 </h1>
@@ -89,16 +81,12 @@ export default function SubfamilyPage({ params }: { params: { family: string, su
                                     familyName={familyName}
                                     subfamilyName={subfamilyName}
                                     genusName={genus}
-                                    className="w-full h-48 object-cover"
                                     alt={`${genus} 대표 이미지`}
                                 />
-                                <div className="p-4">
+                                <div className="p-4 text-center">
                                     <h2 className="text-xl font-semibold text-blue-600 hover:text-blue-800">
                                         {genus}
                                     </h2>
-                                    <p className="text-gray-600 mt-2">
-                                        {genusCounts[genus] || 0} 종
-                                    </p>
                                 </div>
                             </Link>
                         )}

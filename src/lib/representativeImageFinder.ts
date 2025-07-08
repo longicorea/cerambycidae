@@ -1,11 +1,11 @@
-import { CollDataType, DriveImageFileInfo } from "@src/data/collData";
+import {CollDataType, DriveImageInfo} from "@src/data/collData";
 
 export async function findRepresentativeImageFromCollData(
     familyName: string,
     subfamilyName?: string,
     genusName?: string,
     speciesName?: string
-): Promise<DriveImageFileInfo | null> {
+): Promise<DriveImageInfo | null> {
     return await findRepresentativeImageFromSpecimens(
         familyName,
         subfamilyName,
@@ -19,7 +19,7 @@ export async function findRepresentativeImageFromSpecimens(
     subfamilyName?: string,
     genusName?: string,
     speciesName?: string
-): Promise<DriveImageFileInfo | null> {
+): Promise<DriveImageInfo | null> {
     // CollData에서 해당 계층에 속하는 모든 표본 찾기
     let matchingSpecimens: CollDataType[] = [];
     
@@ -54,7 +54,7 @@ export async function findRepresentativeImageFromSpecimens(
     }
     
     // 각 표본의 이미지 파일들을 수집
-    const allImageFiles: DriveImageFileInfo[] = [];
+    const allImageFiles: DriveImageInfo[] = [];
     
     matchingSpecimens.forEach(specimen => {
         if (specimen.imageFiles && specimen.imageFiles.length > 0) {
@@ -69,15 +69,12 @@ export async function findRepresentativeImageFromSpecimens(
     });
     
     if (allImageFiles.length === 0) {
-        console.log(`해당 분류군의 Adult dorsal 이미지를 찾을 수 없습니다: ${familyName} ${subfamilyName || ''} ${genusName || ''} ${speciesName || ''}`);
         return null;
     }
     
-    // 파일명 알파벳 순으로 정렬하여 첫 번째 선택
     allImageFiles.sort((a, b) => a.name.localeCompare(b.name));
-    
-    console.log(`대표 이미지 선택됨: ${allImageFiles[0].name} (총 ${allImageFiles.length}개 중)`);
-    return allImageFiles[0];
+
+    return allImageFiles[0]!;
 }
 
 function isAdultDorsalImage(fileName: string): boolean {
@@ -99,24 +96,4 @@ function isAdultDorsalImage(fileName: string): boolean {
     }
     
     return false;
-}
-
-export async function getRepresentativeImageUrlFromCollData(
-    familyName: string,
-    subfamilyName?: string,
-    genusName?: string,
-    speciesName?: string
-): Promise<string> {
-    const imageFile = await findRepresentativeImageFromCollData(
-        familyName,
-        subfamilyName,
-        genusName,
-        speciesName
-    );
-    
-    if (!imageFile) {
-        return '';
-    }
-    
-    return `https://drive.google.com/uc?export=view&id=${imageFile.id}`;
 }

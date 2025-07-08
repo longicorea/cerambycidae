@@ -8,36 +8,19 @@ import {For} from "react-loops";
 import DefaultSection from "@src/components/section/DefaultSection";
 import {CollDataType} from "@src/data/collData";
 import { getCachedCollectionData } from "@src/lib/dataCacheClient";
-import { initializeImageCache, getSpecimenImageUrl } from "@src/lib/imageCache";
+import {  getSpecimenImageUrl } from "@src/lib/imageCache";
+import AutocompleteSearch from "@src/components/AutocompleteSearch";
 
 function SpecimenImage({ specimen }: { specimen: CollDataType }) {
-    const [imageUrl, setImageUrl] = useState<string>('');
-    const [loading, setLoading] = useState(true);
-    
-    useEffect(() => {
-        const loadImage = async () => {
-            try {
-                setLoading(true);
-                const url = await getSpecimenImageUrl(specimen, 'Adult', 'dorsal');
-                setImageUrl(url);
-            } catch (error) {
-                console.error('이미지 로드 실패:', error);
-            } finally {
-                setLoading(false);
-            }
-        };
-        
-        loadImage();
-    }, [specimen.coll_id]);
-    
-    if (loading) {
-        return (
-            <div className="w-full h-full bg-gray-200 rounded flex items-center justify-center animate-pulse">
-                <span className="text-gray-500 text-sm">로딩 중...</span>
-            </div>
-        );
-    }
-    
+    const imageUrl = useMemo(()=>{
+        const url =  getSpecimenImageUrl(specimen, 'A', 'dorsal');
+        console.log(specimen)
+        console.log(url)
+        return url;
+
+    },[])
+
+
     if (!imageUrl) {
         return (
             <div className="w-full h-full bg-gray-200 rounded flex items-center justify-center">
@@ -47,8 +30,8 @@ function SpecimenImage({ specimen }: { specimen: CollDataType }) {
     }
     
     return (
-        <img 
-            src={imageUrl} 
+        <img
+            src={`/api/image-proxy?url=${encodeURIComponent(imageUrl)}`}
             alt={specimen.name_ko}
             className="w-full h-full object-cover rounded"
             onError={(e) => {
@@ -76,9 +59,6 @@ export default function HomePage() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                // 이미지 캐시 먼저 초기화
-                await initializeImageCache();
-                
                 // 컬렉션 데이터 로드
                 const data = await getCachedCollectionData();
                 setCollData(data);
@@ -92,13 +72,43 @@ export default function HomePage() {
         fetchData();
     }, []);
     
+    // 퍼지 매칭 함수 - 부분 문자열과 순서가 맞는 문자들을 찾음
+    const fuzzyMatch = (searchTerm: string, target: string): boolean => {
+        const search = searchTerm.toLowerCase();
+        const text = target.toLowerCase();
+        
+        // 완전 포함 검사 (기존 방식)
+        if (text.includes(search)) return true;
+        
+        // 순서가 맞는 부분 문자열 검사
+        let searchIndex = 0;
+        for (let i = 0; i < text.length && searchIndex < search.length; i++) {
+            if (text[i] === search[searchIndex]) {
+                searchIndex++;
+            }
+        }
+        
+        return searchIndex === search.length;
+    };
+
     const dataList = useMemo(()=>{
         if(!searchText){
             const randomItems:CollDataType[] = _.sampleSize(collData, 10);
             return randomItems
         }else{
             return collData.filter((item)=>{
-                return item.host.includes(searchText)||item.coll_id.includes(searchText)||item.name_ko.includes(searchText)||item.location.includes(searchText)||item.genus_name.includes(searchText)||item.species_name.includes(searchText)
+                const fields = [
+                    item.host,
+                    item.coll_id,
+                    item.name_ko,
+                    item.location,
+                    item.genus_name,
+                    item.species_name,
+                    item.family_name,
+                    item.subfamily_name
+                ];
+                
+                return fields.some(field => field && fuzzyMatch(searchText, field));
             }).slice(0,10)
         }
     },[searchText, collData])
@@ -117,23 +127,23 @@ export default function HomePage() {
     return (
         <DefaultSection>
             <div className={"flex justify-center py-4"}>
-                <input type={"text"} className={"border rounded-full h-20 w-1/2 text-[30px] px-2 text-gray-600"} onChange={(e:any) => { setSearchText(e.target.value)}} />
+                <AutocompleteSearch 
+                    collData={collData}
+                    onSearch={setSearchText}
+                    placeholder="ID, 한글명, 장소, 기주식물로 검색..."
+                    className="w-1/2"
+                />
             </div>
             <div className={"grid grid-cols-4 gap-2 "}>
                 <For of={dataList}>
                     {(data)=>{
                         return (
-                            <div className={"flex flex-col justify-end items-center p-4 border rounded-2xl h-64 "}>
-                                <div className="grid grid-cols-1 gap-3 h-64 overflow-hidden w-full">
+                            <div className={"flex flex-col justify-end items-center p-4 border rounded-2xl h-96 "}>
+                                <div className="grid grid-cols-1 gap-3 h-96 overflow-hidden w-full">
                                     <SpecimenImage specimen={data} />
                                 </div>
-                                <div className={"grid grid-cols-2 w-full justify-start items-start gap-2"}>
-                                    <LabelText label={"ID"} value={data.coll_id}/>
-                                    <LabelText label={"Name"} value={data.name_ko}/>
-                                    <LabelText label={"Type"} value={data.type}/>
-                                    <LabelText label={"Loc."} value={data.location}/>
-                                    <LabelText label={"Date"} value={data.coll_date}/>
-                                    <LabelText label={"Host"} value={data.host}/>
+                                <div className={"grid  w-full justify-center items-start gap-2"}>
+                                    <span>{data.genus_name+" "+data.species_name}</span>
                                 </div>
 
 

@@ -7,7 +7,8 @@ import DefaultSection from "@src/components/section/DefaultSection";
 import { CollDataType } from "@src/data/collData";
 import { getCachedCollectionData } from "@src/lib/dataCacheClient";
 import { getSpecimenImageUrl, getSpecimenAllImages } from "@src/lib/imageUtils";
-
+import Breadcrumb from "@src/components/Breadcrumb";
+import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 
 function LabelText({label,value}:{label:string,value:string|number}) {
     return (
@@ -20,7 +21,7 @@ function LabelText({label,value}:{label:string,value:string|number}) {
 
 export default function SpeciesPage({ params }: { params: { family: string, subfamily: string, genus: string, species: string } }) {
     const [collData, setCollData] = useState<CollDataType[]>([]);
-    const [loading, setLoading] = useState(true);
+
     const familyName = decodeURIComponent(params.family);
     const subfamilyName = decodeURIComponent(params.subfamily);
     const genusName = decodeURIComponent(params.genus);
@@ -30,11 +31,12 @@ export default function SpeciesPage({ params }: { params: { family: string, subf
         const fetchData = async () => {
             try {
                 const data = await getCachedCollectionData();
+                console.log(data)
                 setCollData(data);
             } catch (error) {
                 console.error('데이터 로드 실패:', error);
             } finally {
-                setLoading(false);
+
             }
         };
         
@@ -59,7 +61,8 @@ export default function SpeciesPage({ params }: { params: { family: string, subf
     }, [collData, familyName, subfamilyName, genusName, speciesName, subspeciesName]);
     
     const firstItem = useMemo(() => {
-        return speciesData[0];
+        console.log(speciesData[0])
+        return speciesData[0]!;
     }, [speciesData]);
     
     const fullSpeciesName = useMemo(() => {
@@ -67,105 +70,89 @@ export default function SpeciesPage({ params }: { params: { family: string, subf
         return `${firstItem.genus_name} ${firstItem.species_name}${firstItem.subspecies_name ? ` ${firstItem.subspecies_name}` : ''}`;
     }, [firstItem]);
     
-    if (loading) {
-        return (
-            <DefaultSection>
-                <div className="text-center py-8">
-                    <div className="text-gray-600">데이터를 불러오는 중...</div>
-                </div>
-            </DefaultSection>
-        );
-    }
-    
-    if (speciesData.length === 0) {
-        return (
-            <DefaultSection>
-                <div className="text-center py-8">
-                    <div className="text-gray-600">해당 종의 데이터를 찾을 수 없습니다.</div>
-                </div>
-            </DefaultSection>
-        );
-    }
-    
-    
+
+
+    const speciesImageInfo = useMemo(()=>{
+         const imageList = speciesData.flatMap((item) => (item?.imageFiles ?? []).map((imageInfo)=>({...item,imageUrl:imageInfo.url})))
+        return imageList;
+    },[speciesData])
+    const [selectedSpecimenImageIndex, setSelectedSpecimenImageIndex] = useState<number>(0);
+    console.log(selectedSpecimenImageIndex)
+    const selectedSpecimenInfo = useMemo(()=>speciesImageInfo[selectedSpecimenImageIndex]!, [speciesImageInfo, selectedSpecimenImageIndex]);
     return (
         <DefaultSection>
-            <div className="py-8">
-                <nav className="mb-6 space-x-2">
-                    <Link href="/explore" className="text-blue-600 hover:text-blue-800">
-                        모든 Family
-                    </Link>
-                    <span className="text-gray-500">{'>'}</span>
-                    <Link href={`/explore/${encodeURIComponent(familyName)}`} className="text-blue-600 hover:text-blue-800">
-                        {familyName}
-                    </Link>
-                    <span className="text-gray-500">{'>'}</span>
-                    <Link href={`/explore/${encodeURIComponent(familyName)}/${encodeURIComponent(subfamilyName)}`} className="text-blue-600 hover:text-blue-800">
-                        {subfamilyName}
-                    </Link>
-                    <span className="text-gray-500">{'>'}</span>
-                    <Link href={`/explore/${encodeURIComponent(familyName)}/${encodeURIComponent(subfamilyName)}/${encodeURIComponent(genusName)}`} className="text-blue-600 hover:text-blue-800">
-                        {genusName}
-                    </Link>
-                    <span className="text-gray-500">{'>'}</span>
-                    <span className="text-gray-700">{fullSpeciesName}</span>
-                </nav>
-                
+            <div className="py-4">
+                <Breadcrumb familyName={familyName} subfamilyName={subfamilyName} genusName={genusName}
+                            speciesName={speciesName}/>
+
                 <h1 className="text-3xl font-bold mb-8 text-center">
                     {fullSpeciesName}
                 </h1>
                 <h2 className="text-xl text-center mb-8 text-gray-600">
-                    {firstItem.name_ko}
+                    {firstItem?.name_ko}
                 </h2>
-                
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    <For of={speciesData}>
-                        {(specimen) => (
-                            <div className="border rounded-lg p-6">
-                                <div className="grid grid-cols-2 gap-3 h-48 overflow-y-scroll w-full mb-4">
-                                    <For of={getSpecimenAllImages(specimen, ['Adult'], ['default', 'dorsal', 'ventral', 'lateral']).slice(0, 4)}>
-                                        {(imageUrl) => {
-                                            return (
-                                                <img 
-                                                    src={imageUrl} 
-                                                    alt={specimen.name_ko} 
-                                                    className="w-full h-20 object-cover rounded"
-                                                    onError={(e) => {
-                                                        (e.target as HTMLImageElement).style.display = 'none';
-                                                    }}
+                <div className={"flex flex-row  space-x-4"}>
+                    <div className={"flex flex-row min-h-[900px] min-w-[900px]"}>
+                        <div className={"w-full h-full border border-gray-300 rounded-md overflow-hidden"}>
+                            <TransformWrapper
+                                initialScale={1}
+                                minScale={1}
+                                maxScale={10}
+                                wheel={{disabled: false}}
+                                doubleClick={{disabled: false}}
+                                pinch={{disabled: false}}
+                            >
+                                {({zoomIn, zoomOut, resetTransform}) => (
+
+
+                                        <div className="flex-1 relative">
+                                            <TransformComponent wrapperClass="w-full h-full">
+                                                <img
+                                                    src={selectedSpecimenInfo?.imageUrl ?? ''}
+                                                    alt="Specimen"
+                                                    className="min-h-[900px] min-w-[900px] object-contain mx-auto"
                                                 />
-                                            );
-                                        }}
-                                    </For>
-                                </div>
-                                
-                                <div className="space-y-2">
-                                    <h3 className="text-lg font-semibold text-blue-600 mb-3">
-                                        표본 정보
-                                    </h3>
-                                    <LabelText label="ID" value={specimen.coll_id}/>
-                                    <LabelText label="타입" value={specimen.type}/>
-                                    <LabelText label="채집일" value={specimen.coll_date}/>
-                                    <LabelText label="채집자" value={specimen.collector_name}/>
-                                    <LabelText label="위치" value={specimen.location}/>
-                                    <LabelText label="기주" value={specimen.host}/>
-                                    {specimen.dna_identified && (
-                                        <LabelText label="DNA ID" value={specimen.dna_identified}/>
-                                    )}
-                                    {specimen.dna_accession_no && (
-                                        <LabelText label="DNA 접근번호" value={specimen.dna_accession_no}/>
-                                    )}
-                                </div>
-                            </div>
-                        )}
-                    </For>
+                                            </TransformComponent>
+                                        </div>
+
+                                )}
+                            </TransformWrapper>
+                        </div>
+                        <div className={"flex flex-col"}>
+                            <For of={speciesImageInfo}>
+                                {(imageInfo, {index}) => (
+                                    <button
+                                        key={index}
+                                        onClick={() => setSelectedSpecimenImageIndex(index)}
+                                        className={`inline-block m-1 p-1 border rounded ${selectedSpecimenImageIndex === index ? 'bg-blue-100' : 'bg-white'}`}
+                                    >
+                                        <img src={imageInfo.imageUrl}
+                                             alt={`${imageInfo.genus_name} ${imageInfo.species_name} 이미지`}
+                                             className="w-16 h-16 object-cover"/>
+                                    </button>
+                                )}
+
+                            </For>
+                        </div>
+                    </div>
+
+
+                    <div className="space-y-2 min-w-[400px]">
+                        <h3 className="text-lg font-semibold text-blue-600 mb-3">
+                            표본 정보
+                        </h3>
+                        <LabelText label="ID" value={selectedSpecimenInfo?.coll_id}/>
+                        <LabelText label="타입" value={selectedSpecimenInfo?.type}/>
+                        <LabelText label="채집일" value={selectedSpecimenInfo?.coll_date}/>
+                        <LabelText label="채집자" value={selectedSpecimenInfo?.collector_name}/>
+                        <LabelText label="위치" value={selectedSpecimenInfo?.location}/>
+                        <LabelText label="기주" value={selectedSpecimenInfo?.host}/>
+                        <LabelText label="DNA Identified" value={selectedSpecimenInfo?.dna_identified}/>
+                        <LabelText label="DNA Accession No." value={selectedSpecimenInfo?.dna_accession_no}/>
+
+                    </div>
                 </div>
-                
-                <div className="mt-8 text-center">
-                    <p className="text-gray-600">
-                        총 {speciesData.length}개의 표본이 있습니다.
-                    </p>
-                </div>
+
             </div>
         </DefaultSection>
     );

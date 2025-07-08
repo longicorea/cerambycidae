@@ -7,10 +7,10 @@ import {
 } from '@src/lib/driveImageServer';
 // getCachedCollectionData는 동적 import로 사용
 import { CollDataType } from '@src/data/collData';
-
+export const dynamic = 'force-dynamic';
 export async function GET(request: NextRequest) {
     try {
-        const { searchParams } = new URL(request.url);
+        const searchParams = request.nextUrl.searchParams;
         const action = searchParams.get('action');
         console.log(action)
         // 캐시 정보 조회

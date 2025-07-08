@@ -8,7 +8,7 @@ const GOOGLE_PRIVATE_KEY = process.env.GOOGLE_PRIVATE_KEY?.replace(/\\n/g, '\n')
 // 서버사이드 메모리 캐시 (실제 운영에서는 Redis 등 사용 권장)
 const imageCache = new Map<string, { imageUrl: string | null; timestamp: number }>();
 const CACHE_EXPIRY_MS = 10 * 60 * 1000; // 10분
-
+export const dynamic = 'force-dynamic';
 /**
  * 구글드라이브 API 인증 객체 생성
  */
@@ -103,7 +103,7 @@ async function searchRepresentativeImage(
 
 export async function GET(request: NextRequest) {
     try {
-        const { searchParams } = new URL(request.url);
+        const searchParams = request.nextUrl.searchParams;
         const familyName = searchParams.get('family');
         const subfamilyName = searchParams.get('subfamily');
         const genusName = searchParams.get('genus');
@@ -122,7 +122,7 @@ export async function GET(request: NextRequest) {
             return NextResponse.json({ imageUrl: cached.imageUrl });
         }
         if(!familyName || !subfamilyName || !genusName || !speciesName) {
-            return null;
+            return NextResponse.json({ error: 'Family name is required' }, { status: 400 });
         }
         // 캐시에 없으면 검색
         const imageUrl = await searchRepresentativeImage(familyName, subfamilyName, genusName, speciesName);

@@ -10,6 +10,13 @@ export interface DriveImageFileInfo {
     parents: string[];
     path: string;
 }
+export interface DriveImageInfo {
+    key: string;
+    size: number;
+    uploaded: string;
+    url: string;
+    name:string;
+}
 
 export type CollDataType = {
     id: string,
@@ -28,7 +35,7 @@ export type CollDataType = {
     location: string,
     host: string,
     is_hidden: boolean | string,
-    imageFiles?: DriveImageFileInfo[], // Drive 파일 정보 전체
+    imageFiles?: DriveImageInfo[], // Drive 파일 정보 전체
 }
 
 export const CollData:CollDataType[] = [];

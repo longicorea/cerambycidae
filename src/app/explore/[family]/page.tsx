@@ -7,6 +7,7 @@ import DefaultSection from "@src/components/section/DefaultSection";
 import { CollDataType } from "@src/data/collData";
 import { getCachedCollectionData } from "@src/lib/dataCacheClient";
 import RepresentativeImage from "@src/components/RepresentativeImage";
+import Breadcrumb from "@src/components/Breadcrumb";
 
 export default function FamilyPage({ params }: { params: { family: string } }) {
     const [collData, setCollData] = useState<CollDataType[]>([]);
@@ -58,13 +59,10 @@ export default function FamilyPage({ params }: { params: { family: string } }) {
     
     return (
         <DefaultSection>
-            <div className="py-8">
-                <nav className="mb-6">
-                    <Link href="/explore" className="text-blue-600 hover:text-blue-800">
-                        ← 모든 Family로 돌아가기
-                    </Link>
-                </nav>
-                
+            <div className="py-4">
+                <Breadcrumb familyName={familyName} />
+
+
                 <h1 className="text-3xl font-bold mb-8 text-center">
                     {familyName} - Subfamily 목록
                 </h1>
@@ -79,16 +77,14 @@ export default function FamilyPage({ params }: { params: { family: string } }) {
                                 <RepresentativeImage 
                                     familyName={familyName}
                                     subfamilyName={subfamily}
-                                    className="w-full h-48 object-cover"
+
                                     alt={`${subfamily} 대표 이미지`}
                                 />
-                                <div className="p-4">
+                                <div className="p-4 text-center">
                                     <h2 className="text-xl font-semibold text-blue-600 hover:text-blue-800">
                                         {subfamily}
                                     </h2>
-                                    <p className="text-gray-600 mt-2">
-                                        {subfamilyCounts[subfamily] || 0} 종
-                                    </p>
+
                                 </div>
                             </Link>
                         )}

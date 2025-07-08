@@ -1,17 +1,6 @@
-import { CollDataType, DriveImageFileInfo } from "@src/data/collData";
+import {CollDataType, DriveImageFileInfo, DriveImageInfo} from "@src/data/collData";
 
-export interface DriveImageInfo {
-    id: string;
-    name: string;
-    webViewLink: string;
-    webContentLink: string;
-    thumbnailLink?: string;
-    mimeType: string;
-    size: string;
-    modifiedTime: string;
-    parents: string[];
-    path: string; // family/subfamily/genus/species/filename
-}
+
 
 let imageCache: Map<string, DriveImageInfo> = new Map();
 let lastCacheUpdate: Date = new Date(0);
@@ -42,19 +31,14 @@ export async function refreshImageCache(): Promise<void> {
             return;
         }
         
-        const imageInfos = await fetchAllImages(folderId, apiKey);
+        const imageInfos = await fetchR2Images();
         
         // 새로운 캐시 맵 생성
         const newCache = new Map<string, DriveImageInfo>();
         
         imageInfos.forEach(imageInfo => {
-            // 경로 기반 키 생성 (family/subfamily/genus/species/filename)
-            const pathKey = imageInfo.path.toLowerCase();
+            const pathKey = imageInfo.key;
             newCache.set(pathKey, imageInfo);
-            
-            // 파일명 기반 키도 생성 (하위 호환성)
-            const fileName = imageInfo.name.toLowerCase();
-            newCache.set(fileName, imageInfo);
         });
         
         imageCache = newCache;
@@ -86,8 +70,8 @@ export async function enrichCollDataWithImages(): Promise<void> {
         console.log('CollData에 이미지 파일 정보 추가 중...');
         
         const result = collData.map((specimen: CollDataType) => {
-            const imageFiles: DriveImageFileInfo[] = [];
-            
+            const imageFiles: DriveImageInfo[] = [];
+
             // 해당 표본의 모든 이미지 찾기
             imageCache.forEach((imageInfo, key) => {
                 // coll_id로 매칭되는 이미지 찾기
@@ -121,53 +105,31 @@ export async function enrichCollDataWithImages(): Promise<void> {
     }
 }
 
-async function fetchAllImages(folderId: string, apiKey: string, path: string = ''): Promise<DriveImageInfo[]> {
-    const allImages: DriveImageInfo[] = [];
-    
+async function fetchR2Images(prefix: string = ''): Promise<DriveImageInfo[]> {
+    const endpoint = `https://my-cdn-worker.longicorea.workers.dev/list?prefix=${encodeURIComponent(prefix)}`;
+
     try {
-        const url = `https://www.googleapis.com/drive/v3/files?q='${folderId}'+in+parents&key=${apiKey}&fields=files(id,name,webViewLink,webContentLink,thumbnailLink,mimeType,size,modifiedTime,parents)`;
-        
-        const response = await fetch(url);
-        if (!response.ok) {
-            throw new Error(`Google Drive API 호출 실패: ${response.status} ${response.statusText}`);
-        }
-        
-        const data = await response.json();
-        
-        if (!data.files || !Array.isArray(data.files)) {
-            console.warn('폴더에서 파일을 찾을 수 없습니다:', folderId);
-            return [];
-        }
-        
-        for (const file of data.files) {
-            const currentPath = path ? `${path}/${file.name}` : file.name;
-            console.log(`파일 탐색 중: ${currentPath} (${file.mimeType})`);
-            if (file.mimeType === 'application/vnd.google-apps.folder') {
-                // 폴더인 경우 재귀적으로 탐색
-                const subImages = await fetchAllImages(file.id, apiKey, currentPath);
-                allImages.push(...subImages);
-            } else if (file.mimeType && file.mimeType.startsWith('image/')) {
-                // 이미지 파일인 경우 캐시에 추가
-                allImages.push({
-                    id: file.id,
-                    name: file.name,
-                    webViewLink: file.webViewLink || '',
-                    webContentLink: file.webContentLink || '',
-                    thumbnailLink: file.thumbnailLink,
-                    mimeType: file.mimeType,
-                    size: file.size || '0',
-                    modifiedTime: file.modifiedTime || new Date().toISOString(),
-                    parents: file.parents || [],
-                    path: currentPath
-                });
-            }
-        }
-        
-    } catch (error) {
-        console.error(`폴더 ${folderId} 탐색 실패:`, error);
+        const res = await fetch(endpoint);
+        if (!res.ok) throw new Error(`R2 목록 불러오기 실패: ${res.statusText}`);
+
+        const data: {
+            key: string;
+            size: number;
+            uploaded: string;
+            url: string;
+        }[] = await res.json();
+
+        return data.map((item) => {
+            const name = item.key.split('/').pop() || item.key;
+            return {
+                ...item,
+                name,
+            };
+        });
+    } catch (err) {
+        console.error("이미지 목록 불러오기 실패:", err);
+        return [];
     }
-    
-    return allImages;
 }
 
 export function findImageForSpecimen(
@@ -223,46 +185,7 @@ export function findImageForSpecimen(
     return null;
 }
 
-export function findRepresentativeImageByTaxonomy(
-    familyName: string,
-    subfamilyName?: string,
-    genusName?: string,
-    speciesName?: string
-): DriveImageInfo | null {
-    // 해당 계층에 속하는 모든 이미지 찾기
-    const matchingImages: DriveImageInfo[] = [];
 
-    imageCache.forEach((imageInfo) => {
-        const pathParts = imageInfo.path.split('/');
-        
-        // 경로가 충분한 깊이를 가지는지 확인
-        if (pathParts.length < 5) return; // family/subfamily/genus/species/filename
-        
-        const [family, subfamily, genus, species] = pathParts;
-        
-        // 계층별 매칭 확인
-        if (family !== familyName) return;
-        if (subfamilyName && subfamily !== subfamilyName) return;
-        if (genusName && genus !== genusName) return;
-        if (speciesName && !species?.startsWith(speciesName)) return;
-        
-        // Adult dorsal 이미지만 선택
-        const fileName = imageInfo.name.toLowerCase();
-        if (fileName.includes('adult') && fileName.includes('dorsal')) {
-            matchingImages.push(imageInfo);
-        } else if (fileName.includes('dorsal') && !fileName.includes('larv')) {
-            // Adult이 명시되지 않았지만 dorsal이고 larva가 아닌 경우
-            matchingImages.push(imageInfo);
-        }
-    });
-    
-    if (matchingImages.length === 0) return null;
-    
-    // 파일명 알파벳 순으로 정렬하여 첫 번째 선택
-    matchingImages.sort((a, b) => a.name.localeCompare(b.name));
-    
-    return matchingImages[0] ?? null;
-}
 
 
 

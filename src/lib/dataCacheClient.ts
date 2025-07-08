@@ -13,7 +13,7 @@ export async function getCachedCollectionData(): Promise<CollDataType[]> {
     try {
         // localStorage에서 캐시된 데이터 확인
         const cachedDataString = localStorage.getItem(CACHE_KEY);
-        
+        console.log('클라이언트 캐시 조회:', cachedDataString ? '캐시 있음' : '캐시 없음');
         if (cachedDataString) {
             const cachedData: CacheData = JSON.parse(cachedDataString);
             const now = Date.now();
@@ -56,7 +56,7 @@ export async function getCachedCollectionData(): Promise<CollDataType[]> {
 }
 
 async function fetchCollectionData(): Promise<CollDataType[]> {
-    const response = await fetch('/cerambycidae/api/collection-data');
+    const response = await fetch('/api/collection-data');
     if (!response.ok) {
         throw new Error('데이터 가져오기 실패');
     }
