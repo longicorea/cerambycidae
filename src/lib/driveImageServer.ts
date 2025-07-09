@@ -44,10 +44,10 @@ export async function refreshImageCache() {
 
     setIsInitializing(true);
     console.log('Google Drive 이미지 캐시 갱신 시작...');
-    let imageInfos: DriveImageInfo[] = [];
+    let result: CollDataType[] = [];
     try {
         
-        imageInfos = await fetchR2Images();
+        const imageInfos = await fetchR2Images();
         
         // 새로운 캐시 맵 생성
         const newCache = new Map<string, DriveImageInfo>();
@@ -63,7 +63,7 @@ export async function refreshImageCache() {
         console.log(`Google Drive 캐시 갱신 완료: ${getImageCache().size}개 이미지`);
         
         // CollData에 이미지 URL 정보 추가
-        await enrichCollDataWithImages();
+        result = await enrichCollDataWithImages();
         
     } catch (error) {
         console.error('Google Drive 캐시 갱신 실패:', error);
@@ -71,11 +71,12 @@ export async function refreshImageCache() {
     } finally {
         setIsInitializing(false);
     }
-    return imageInfos;
+    return result;
 
 }
 
-export async function enrichCollDataWithImages(): Promise<void> {
+export async function enrichCollDataWithImages(): Promise<CollDataType[]> {
+    let result : CollDataType[] = [];
     try {
         const { getCachedCollectionData, updateServerCache, getServerCacheInfo } = await import('@src/lib/dataCacheServer');
         if (isCacheExpired() || getImageCache().size === 0) {
@@ -121,6 +122,7 @@ export async function enrichCollDataWithImages(): Promise<void> {
     } catch (error) {
         console.error('CollData 이미지 파일 정보 추가 실패:', error);
     }
+    return result
 }
 
 async function fetchR2Images(prefix: string = ''): Promise<DriveImageInfo[]> {
