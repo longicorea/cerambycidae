@@ -1,12 +1,13 @@
 'use client'
 
-import { useState, useEffect, useMemo } from "react";
-import Link from "next/link";
-import { For } from "react-loops";
+import {useEffect, useMemo, useState} from "react";
+import {For} from "react-loops";
 import DefaultSection from "@src/components/section/DefaultSection";
-import { CollDataType } from "@src/data/collData";
-import { getCachedCollectionData } from "@src/lib/dataCacheClient";
-import RepresentativeImage from "@src/components/RepresentativeImage";
+import {CollDataType} from "@src/data/collData";
+import {getCachedCollectionData} from "@src/lib/dataCacheClient";
+import {ImageCard} from "@src/components/ImageCard";
+import Breadcrumb from "@src/components/Breadcrumb";
+import {ExploreTitle} from "@src/components/ExploreTitle";
 
 export default function ExplorePage() {
     const [collData, setCollData] = useState<CollDataType[]>([]);
@@ -29,18 +30,23 @@ export default function ExplorePage() {
     }, []);
 
     const families = useMemo(() => {
-        return Array.from(new Set(collData.map(item => item.family_name).filter(Boolean)));
+        const families = Array.from(new Set(collData.map(item => item.family_name).filter(Boolean)));
+        const result = families.map((family) => ({
+            familyName: family,
+            specimens: collData.filter((item => item.family_name === family && item.imageFiles && item.imageFiles.length > 0))
+
+        })).map((family) => {
+            const imageList = family.specimens.flatMap((specimen) => specimen.imageFiles)
+            const representativeImageUrl = imageList.find(img => img?.name.includes("A_dorsal"))?.url || imageList[0]?.url
+
+            return {
+                ...family,
+                representativeImageUrl
+            };
+        })
+        return result;
     }, [collData]);
 
-    const familyCounts = useMemo(() => {
-        const counts: Record<string, number> = {};
-        collData.forEach(item => {
-            if (item.family_name) {
-                counts[item.family_name] = (counts[item.family_name] || 0) + 1;
-            }
-        });
-        return counts;
-    }, [collData]);
 
     if (loading) {
         return (
@@ -55,23 +61,19 @@ export default function ExplorePage() {
     return (
         <DefaultSection>
             <div className="py-4">
-                <h1 className="text-3xl font-bold mb-8 text-center">Family</h1>
+                <Breadcrumb familyName={""}/>
+                <ExploreTitle title={"Coleoptera"} subtitle={"order"}/>
+
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                     <For of={families}>
                         {(family) => (
-                            <Link
-                                href={`/explore/${encodeURIComponent(family)}`}
-                                className="block border rounded-lg hover:bg-gray-50 transition-colors overflow-hidden w-fit"
-                            >    <RepresentativeImage
-                                        familyName={family}
-                                        alt={`${family} 대표 이미지`}
-                                    />
-                                    <div className="p-4 text-center">
-                                        <h2 className="text-xl font-semibold text-blue-600 hover:text-blue-800">
-                                            {family}
-                                        </h2>
-                                    </div>
-                            </Link>
+
+                            <ImageCard
+                                href={`/explore/${encodeURIComponent(family.familyName)}`}
+                                imageUrl={family.representativeImageUrl}
+                                description={family.familyName}/>
+
+
                         )}
                     </For>
                 </div>

@@ -1,19 +1,19 @@
 'use client'
 
-import { useState, useEffect, useMemo } from "react";
-import Link from "next/link";
-import { For } from "react-loops";
+import {useEffect, useMemo, useState} from "react";
+import {For} from "react-loops";
 import DefaultSection from "@src/components/section/DefaultSection";
-import { CollDataType } from "@src/data/collData";
-import { getCachedCollectionData } from "@src/lib/dataCacheClient";
-import RepresentativeImage from "@src/components/RepresentativeImage";
+import {CollDataType} from "@src/data/collData";
+import {getCachedCollectionData} from "@src/lib/dataCacheClient";
 import Breadcrumb from "@src/components/Breadcrumb";
+import {ImageCard} from "@src/components/ImageCard";
+import {ExploreTitle} from "@src/components/ExploreTitle";
 
-export default function FamilyPage({ params }: { params: { family: string } }) {
+export default function FamilyPage({params}: { params: { family: string } }) {
     const [collData, setCollData] = useState<CollDataType[]>([]);
     const [loading, setLoading] = useState(true);
     const familyName = decodeURIComponent(params.family);
-    
+
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -25,28 +25,34 @@ export default function FamilyPage({ params }: { params: { family: string } }) {
                 setLoading(false);
             }
         };
-        
+
         fetchData();
     }, []);
-    
+
     const familyData = useMemo(() => {
         return collData.filter(item => item.family_name === familyName);
     }, [collData, familyName]);
-    
+
+
     const subfamilies = useMemo(() => {
-        return Array.from(new Set(familyData.map(item => item.subfamily_name).filter(Boolean)));
-    }, [familyData]);
-    
-    const subfamilyCounts = useMemo(() => {
-        const counts: Record<string, number> = {};
-        familyData.forEach(item => {
-            if (item.subfamily_name) {
-                counts[item.subfamily_name] = (counts[item.subfamily_name] || 0) + 1;
-            }
-        });
-        return counts;
-    }, [familyData]);
-    
+        const subfamilies = Array.from(new Set(collData.map(item => item.subfamily_name).filter(Boolean)));
+        const result = subfamilies.map((subfamily) => ({
+            subFamilyName: subfamily,
+            specimens: collData.filter((item => item.subfamily_name === subfamily && item.imageFiles && item.imageFiles.length > 0))
+
+        })).map((subfamily) => {
+            const imageList = subfamily.specimens.flatMap((specimen) => specimen.imageFiles)
+            const representativeImageUrl = imageList.find(img => img?.name.includes("A_dorsal"))?.url || imageList[0]?.url
+
+
+            return {
+                ...subfamily,
+                representativeImageUrl
+            };
+        })
+        return result;
+    }, [collData]);
+
     if (loading) {
         return (
             <DefaultSection>
@@ -56,37 +62,22 @@ export default function FamilyPage({ params }: { params: { family: string } }) {
             </DefaultSection>
         );
     }
-    
+
     return (
         <DefaultSection>
             <div className="py-4">
-                <Breadcrumb familyName={familyName} />
+                <Breadcrumb familyName={familyName}/>
+                <ExploreTitle title={familyName} subtitle={"family"}/>
 
 
-                <h1 className="text-3xl font-bold mb-8 text-center">
-                    {familyName} - Subfamily
-                </h1>
-                
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                     <For of={subfamilies}>
                         {(subfamily) => (
-                            <Link 
-                                href={`/explore/${encodeURIComponent(familyName)}/${encodeURIComponent(subfamily)}`}
-                                className="block border rounded-lg hover:bg-gray-50 transition-colors overflow-hidden"
-                            >
-                                <RepresentativeImage 
-                                    familyName={familyName}
-                                    subfamilyName={subfamily}
+                            <ImageCard
+                                href={`/explore/${encodeURIComponent(familyName)}/${encodeURIComponent(subfamily.subFamilyName)}`}
+                                imageUrl={subfamily.representativeImageUrl}
+                                description={subfamily.subFamilyName}/>
 
-                                    alt={`${subfamily} 대표 이미지`}
-                                />
-                                <div className="p-4 text-center">
-                                    <h2 className="text-xl font-semibold text-blue-600 hover:text-blue-800">
-                                        {subfamily}
-                                    </h2>
-
-                                </div>
-                            </Link>
                         )}
                     </For>
                 </div>

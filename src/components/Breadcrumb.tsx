@@ -21,7 +21,7 @@ export default function Breadcrumb({familyName, subfamilyName, genusName, specie
 }) {
     return (
         <nav className="mb-6 space-x-2">
-            <BreadcrumbLink href="/explore" name="Family" isLast={!familyName}/>
+            <BreadcrumbLink href="/explore" name="Coleoptera" isLast={!familyName}/>
             <BreadcrumbLink href={`/explore/${encodeURIComponent(familyName)}`} name={familyName}
                             isLast={!subfamilyName}/>
             <BreadcrumbLink href={`/explore/${encodeURIComponent(familyName)}/${encodeURIComponent(subfamilyName!)}`}

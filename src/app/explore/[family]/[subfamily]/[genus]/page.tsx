@@ -1,30 +1,31 @@
 'use client'
 
-import { useState, useEffect, useMemo } from "react";
-import Link from "next/link";
-import { For } from "react-loops";
+import {useEffect, useMemo, useState} from "react";
+import {For} from "react-loops";
 import DefaultSection from "@src/components/section/DefaultSection";
-import { CollDataType } from "@src/data/collData";
-import { getCachedCollectionData } from "@src/lib/dataCacheClient";
-import RepresentativeImage from "@src/components/RepresentativeImage";
+import {CollDataType} from "@src/data/collData";
+import {getCachedCollectionData} from "@src/lib/dataCacheClient";
 import Breadcrumb from "@src/components/Breadcrumb";
+import {ExploreTitle} from "@src/components/ExploreTitle";
+import {ImageCard} from "@src/components/ImageCard";
 
-function LabelText({label,value}:{label:string,value:string|number}) {
+function LabelText({label, value}: { label: string, value: string | number }) {
     return (
         <div className={"grid grid-cols-4 items-center space-x-2"}>
             <span className={"col-span-1 w-20"}>{label}</span>
-            <span className={"col-span-3 text-gray-600 text-sm overflow-hidden text-nowrap text-ellipsis"}>{value}</span>
+            <span
+                className={"col-span-3 text-gray-600 text-sm overflow-hidden text-nowrap text-ellipsis"}>{value}</span>
         </div>
     )
 }
 
-export default function GenusPage({ params }: { params: { family: string, subfamily: string, genus: string } }) {
+export default function GenusPage({params}: { params: { family: string, subfamily: string, genus: string } }) {
     const [collData, setCollData] = useState<CollDataType[]>([]);
     const [loading, setLoading] = useState(true);
     const familyName = decodeURIComponent(params.family);
     const subfamilyName = decodeURIComponent(params.subfamily);
     const genusName = decodeURIComponent(params.genus);
-    
+
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -36,18 +37,18 @@ export default function GenusPage({ params }: { params: { family: string, subfam
                 setLoading(false);
             }
         };
-        
+
         fetchData();
     }, []);
-    
+
     const genusData = useMemo(() => {
-        return collData.filter(item => 
-            item.family_name === familyName && 
-            item.subfamily_name === subfamilyName && 
+        return collData.filter(item =>
+            item.family_name === familyName &&
+            item.subfamily_name === subfamilyName &&
             item.genus_name === genusName
         );
     }, [collData, familyName, subfamilyName, genusName]);
-    
+
     // Species별로 그룹화
     const speciesGroups = useMemo(() => {
         return genusData.reduce((acc, item) => {
@@ -59,11 +60,28 @@ export default function GenusPage({ params }: { params: { family: string, subfam
             return acc;
         }, {} as Record<string, CollDataType[]>);
     }, [genusData]);
-    
+
     const species = useMemo(() => {
-        return Object.keys(speciesGroups);
+
+
+        const speciesList = Object.keys(speciesGroups);
+        const result = speciesList.map((species) => ({
+            speciesName: species,
+            specimens: collData.filter((item => item.species_name === species && item.imageFiles && item.imageFiles.length > 0))
+
+        })).map((species) => {
+            const imageList = species.specimens.flatMap((specimen) => specimen.imageFiles)
+            const representativeImageUrl = imageList.find(img => img?.name.includes("A_dorsal"))?.url || imageList[0]?.url
+
+
+            return {
+                ...species,
+                representativeImageUrl
+            };
+        })
+        return result;
     }, [speciesGroups]);
-    
+
     if (loading) {
         return (
             <DefaultSection>
@@ -73,46 +91,26 @@ export default function GenusPage({ params }: { params: { family: string, subfam
             </DefaultSection>
         );
     }
-    
+
     return (
         <DefaultSection>
             <div className="py-4">
-                <Breadcrumb familyName={familyName} subfamilyName={subfamilyName} genusName={genusName} />
+                <Breadcrumb familyName={familyName} subfamilyName={subfamilyName} genusName={genusName}/>
+                <ExploreTitle title={genusName} subtitle={"Genus"}/>
 
-
-                <h1 className="text-3xl font-bold mb-8 text-center">
-                    {genusName} - Species
-                </h1>
-                
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                     <For of={species}>
                         {(speciesKey) => {
-                            const speciesData = speciesGroups[speciesKey]!;
+                            const speciesData = speciesGroups[speciesKey.speciesName]!;
                             const firstItem = speciesData[0]!;
-                            const speciesName = firstItem.species_name + (firstItem.subspecies_name ? ` ${firstItem.subspecies_name}` : '');
-                            
-                            return (
-                                <Link 
-                                    href={`/explore/${encodeURIComponent(familyName)}/${encodeURIComponent(subfamilyName)}/${encodeURIComponent(genusName)}/${encodeURIComponent(speciesKey)}`}
-                                    className="block border rounded-lg hover:bg-gray-50 transition-colors overflow-hidden"
-                                >
-                                    <RepresentativeImage 
-                                        familyName={familyName}
-                                        subfamilyName={subfamilyName}
-                                        genusName={genusName}
-                                        speciesName={speciesName}
-                                        alt={`${firstItem.genus_name} ${speciesName} 대표 이미지`}
-                                    />
-                                    <div className="p-4 text-center">
-                                        <h2 className="text-xl font-semibold text-blue-600 hover:text-blue-800 mb-2">
-                                            {firstItem.genus_name} {speciesName}
-                                        </h2>
-                                        <p className="text-gray-600 mb-1">
-                                            {firstItem.name_ko}
-                                        </p>
+                            const speciesName = firstItem.genus_name + ' ' + firstItem.species_name + (firstItem.subspecies_name ? ` ${firstItem.subspecies_name}` : '');
 
-                                    </div>
-                                </Link>
+                            return (
+                                <ImageCard
+                                    href={`/explore/${encodeURIComponent(familyName)}/${encodeURIComponent(subfamilyName)}/${encodeURIComponent(genusName)}/${encodeURIComponent(speciesKey.speciesName)}`}
+                                    imageUrl={speciesKey.representativeImageUrl}
+                                    description={speciesName}/>
+
                             );
                         }}
                     </For>

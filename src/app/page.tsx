@@ -8,48 +8,9 @@ import {For} from "react-loops";
 import DefaultSection from "@src/components/section/DefaultSection";
 import {CollDataType} from "@src/data/collData";
 import {getCachedCollectionData} from "@src/lib/dataCacheClient";
-import {getSpecimenImageUrl} from "@src/lib/imageCache";
 import AutocompleteSearch from "@src/components/AutocompleteSearch";
-import Link from "next/link";
+import {ImageCard} from "@src/components/ImageCard";
 
-function SpecimenImage({specimen}: { specimen: CollDataType }) {
-    const imageUrl = useMemo(() => {
-        const url = getSpecimenImageUrl(specimen, 'A', 'dorsal');
-        return url;
-
-    }, [])
-
-
-    if (!imageUrl) {
-        return (
-            <div className="w-full h-full bg-slate-50 rounded flex items-center justify-center">
-                <span className="text-gray-500 text-sm">이미지 없음</span>
-            </div>
-        );
-    }
-
-    return (
-        <img
-            src={imageUrl}
-            alt={specimen.name_ko}
-            className="w-full h-full object-cover rounded"
-            onError={(e) => {
-                (e.target as HTMLImageElement).style.display = 'none';
-            }}
-        />
-    );
-}
-
-function LabelText({label, value}: { label: string, value: string | number }) {
-    return (
-        <div className={"grid grid-cols-4 items-center space-x-2"}>
-            <span className={"col-span-1 w-20"}>{label}</span>
-            <span
-                className={"col-span-3 text-gray-600 text-sm overflow-hidden text-nowrap text-ellipsis"}>{value}</span>
-        </div>
-    )
-
-}
 
 export default function HomePage() {
     const [searchText, setSearchText] = useState("");
@@ -136,26 +97,14 @@ export default function HomePage() {
                     className="w-1/2"
                 />
             </div>
-            <div className={"grid grid-cols-4 gap-2 "}>
+            <div className={"flex flex-wrap gap-2 justify-start "}>
                 <For of={dataList}>
                     {(data) => {
                         return (
-                            <Link
+                            <ImageCard
                                 href={`/explore/${encodeURIComponent(data.family_name)}/${encodeURIComponent(data.subfamily_name)}/${encodeURIComponent(data.genus_name)}/${encodeURIComponent(data.species_name)}`}
-                                className="block  bg-slate-50 rounded-lg hover:bg-gray-100 transition-colors overflow-hidden"
-                            >
-                                <div
-                                    className={"flex flex-col space-y-2 justify-end items-center p-4  rounded-2xl h-96 "}>
-                                    <div className="grid grid-cols-1 gap-3 h-96 overflow-hidden w-full">
-                                        <SpecimenImage specimen={data}/>
-                                    </div>
-                                    <div className={"grid  w-full justify-center items-start gap-2 text-gray-600"}>
-                                        <span><i>{data.genus_name + " " + data.species_name}</i></span>
-                                    </div>
-
-
-                                </div>
-                            </Link>
+                                imageUrl={(data.imageFiles ?? []).find(img => img.name.includes("A_dorsal"))?.url}
+                                description={data.genus_name + " " + data.species_name}/>
                         )
                     }}
                 </For>
