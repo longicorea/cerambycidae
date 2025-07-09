@@ -89,7 +89,7 @@ export default function SpeciesPage({params}: {
                 <Breadcrumb familyName={familyName} subfamilyName={subfamilyName} genusName={genusName}
                             speciesName={speciesName}/>
                 <ExploreTitle title={`${genusName} ${speciesName}`} subtitle={"Species"}/>
-                <div className={"flex flex-row  space-x-4"}>
+                <div className={"flex flex-row  space-x-8"}>
                     <div className={"flex flex-row space-x-4 min-h-[900px] min-w-[900px]"}>
                         <div className={"w-full h-full border border-gray-300 rounded-md overflow-hidden"}>
                             <TransformWrapper

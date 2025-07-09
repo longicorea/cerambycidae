@@ -23,7 +23,7 @@ function MenuLink({targetUrl, label}: { targetUrl: string, label: string }) {
 export default function Navigation() {
     return (
         <nav className="h-16 bg-white ">
-            <div className="max-w-7xl px-10  h-full flex flex-row items-center w-full ">
+            <div className="max-w-7xl mx-auto px-10  h-full flex flex-row items-center w-full ">
                 <div className="flex flex-row justify-between items-center w-full ">
                     <div className="flex items-center">
                         <Link href="/" className="text-xl font-bold text-gray-900">
