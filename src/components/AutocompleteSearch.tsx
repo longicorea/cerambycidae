@@ -25,6 +25,7 @@ export default function AutocompleteSearch({
 
   // 퍼지 매칭 함수 - 부분 문자열과 순서가 맞는 문자들을 찾음
   const fuzzyMatch = (searchTerm: string, target: string): boolean => {
+    console.log(`Fuzzy matching: "${searchTerm}" in "${target}"`);
     const search = searchTerm.toLowerCase();
     const text = target.toLowerCase();
     
@@ -47,15 +48,13 @@ export default function AutocompleteSearch({
       const suggestionMap = new Map<string, number>();
       
       collData.forEach(item => {
+        console.log(collData)
         const fields = [
-          item.coll_id,
           item.name_ko,
-          item.location,
-          item.host,
           item.genus_name,
-          item.species_name,
           item.family_name,
-          item.subfamily_name
+          item.subfamily_name,
+          `${item.genus_name} ${item.species_name}`
         ];
         
         fields.forEach(field => {

@@ -19,7 +19,7 @@ export async function getCollectionData(): Promise<CollDataType[]> {
     
     const response = await sheets.spreadsheets.values.get({
       spreadsheetId: GOOGLE_SHEET_ID,
-      range: 'A1:L1000', // 시트 범위 조정 필요시 수정
+      range: 'A1:P10000', // 시트 범위 조정 필요시 수정
     });
 
     const rows = response.data.values || [];

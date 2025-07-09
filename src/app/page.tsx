@@ -60,6 +60,7 @@ export default function HomePage() {
             try {
                 // 컬렉션 데이터 로드
                 const data = await getCachedCollectionData();
+                console.log(data)
                 setCollData(data);
             } catch (error) {
                 console.error('데이터 로드 실패:', error);
@@ -104,7 +105,8 @@ export default function HomePage() {
                     item.genus_name,
                     item.species_name,
                     item.family_name,
-                    item.subfamily_name
+                    item.subfamily_name,
+                    `${item.genus_name} ${item.species_name}`,
                 ];
                 
                 return fields.some(field => field && fuzzyMatch(searchText, field));
@@ -129,7 +131,7 @@ export default function HomePage() {
                 <AutocompleteSearch 
                     collData={collData}
                     onSearch={setSearchText}
-                    placeholder="ID, 한글명, 장소, 기주식물로 검색..."
+                    placeholder="과명, 속명, 종명, 국명으로 검색..."
                     className="w-1/2"
                 />
             </div>
