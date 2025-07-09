@@ -89,7 +89,7 @@ export async function enrichCollDataWithImages(): Promise<CollDataType[]> {
         
         console.log('CollData에 이미지 파일 정보 추가 중...');
         
-        const result = collData.map((specimen: CollDataType) => {
+        result = collData.map((specimen: CollDataType) => {
             const imageFiles: DriveImageInfo[] = [];
 
             // 해당 표본의 모든 이미지 찾기
@@ -121,6 +121,7 @@ export async function enrichCollDataWithImages(): Promise<CollDataType[]> {
         
     } catch (error) {
         console.error('CollData 이미지 파일 정보 추가 실패:', error);
+        throw error
     }
     return result
 }
