@@ -10,6 +10,7 @@ import {CollDataType} from "@src/data/collData";
 import { getCachedCollectionData } from "@src/lib/dataCacheClient";
 import {  getSpecimenImageUrl } from "@src/lib/imageCache";
 import AutocompleteSearch from "@src/components/AutocompleteSearch";
+import Link from "next/link";
 
 function SpecimenImage({ specimen }: { specimen: CollDataType }) {
     const imageUrl = useMemo(()=>{
@@ -136,16 +137,21 @@ export default function HomePage() {
                 <For of={dataList}>
                     {(data)=>{
                         return (
-                            <div className={"flex flex-col justify-end items-center p-4 border rounded-2xl h-96 "}>
-                                <div className="grid grid-cols-1 gap-3 h-96 overflow-hidden w-full">
-                                    <SpecimenImage specimen={data} />
-                                </div>
-                                <div className={"grid  w-full justify-center items-start gap-2"}>
-                                    <span>{data.genus_name+" "+data.species_name}</span>
-                                </div>
+                            <Link
+                                href={`/explore/${encodeURIComponent(data.family_name)}/${encodeURIComponent(data.subfamily_name)}/${encodeURIComponent(data.genus_name)}/${encodeURIComponent(data.species_name)}`}
+                                className="block border rounded-lg hover:bg-gray-50 transition-colors overflow-hidden"
+                            >
+                                <div className={"flex flex-col justify-end items-center p-4 border rounded-2xl h-96 "}>
+                                    <div className="grid grid-cols-1 gap-3 h-96 overflow-hidden w-full">
+                                        <SpecimenImage specimen={data} />
+                                    </div>
+                                    <div className={"grid  w-full justify-center items-start gap-2"}>
+                                        <span>{data.genus_name+" "+data.species_name}</span>
+                                    </div>
 
 
-                            </div>
+                                </div>
+                            </Link>
                         )
                     }}
                 </For>
