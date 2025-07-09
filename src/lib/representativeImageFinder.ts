@@ -1,4 +1,5 @@
 import {CollDataType, DriveImageInfo} from "@src/data/collData";
+import {getCachedCollectionData} from "@src/lib/dataCacheServer";
 
 export async function findRepresentativeImageFromCollData(
     familyName: string,
@@ -25,7 +26,6 @@ export async function findRepresentativeImageFromSpecimens(
     
     try {
         // 서버사이드에서 CollData 가져오기
-        const { getCachedCollectionData } = await import('@src/lib/dataCacheServer');
         const collData = await getCachedCollectionData();
         
         // 계층별 필터링

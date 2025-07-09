@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getCachedCollectionData } from '@src/lib/dataCacheServer';
+import {enrichCollDataWithImages} from "@src/lib/driveImageServer";
 
 export async function GET() {
   try {

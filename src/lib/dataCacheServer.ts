@@ -1,5 +1,7 @@
 // 서버 전용 데이터 캐시
 import { CollDataType } from "@src/data/collData";
+import {getCollectionData} from "@src/lib/googleSheets";
+import {isImageCacheExpired, refreshImageCache} from "@src/lib/driveImageServer";
 
 const CACHE_EXPIRY_MS = 60 * 1000; // 1분
 
@@ -24,6 +26,9 @@ function setServerCache(cache: CacheData | null): void {
 
 export async function getCachedCollectionData(): Promise<CollDataType[]> {
     try {
+        if(isImageCacheExpired()){
+           await refreshImageCache();
+        }
         // 서버사이드 메모리 캐시 확인
         const serverCache = getServerCache();
         console.log('서버 캐시 상태:', serverCache ? '존재' : '없음');
@@ -42,7 +47,6 @@ export async function getCachedCollectionData(): Promise<CollDataType[]> {
         const oldData = serverCache?.data || [];
         
         // 서버 전용 모듈에서 데이터 로드
-        const { getCollectionData } = await import('@src/lib/googleSheets.server');
         const freshData = await getCollectionData();
         
         // 기존 데이터에서 이미지 정보가 있는 것들을 새 데이터에 병합

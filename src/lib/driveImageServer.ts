@@ -1,4 +1,5 @@
 import {CollDataType, DriveImageInfo} from "@src/data/collData";
+import {getCachedCollectionData, updateServerCache} from "@src/lib/dataCacheServer";
 declare global {
     var __imageCache__: Map<string, DriveImageInfo> | undefined;
     var __lastCacheUpdate__: Date | undefined;
@@ -78,8 +79,7 @@ export async function refreshImageCache() {
 export async function enrichCollDataWithImages(): Promise<CollDataType[]> {
     let result : CollDataType[] = [];
     try {
-        const { getCachedCollectionData, updateServerCache, getServerCacheInfo } = await import('@src/lib/dataCacheServer');
-        if (isCacheExpired() || getImageCache().size === 0) {
+        if (isImageCacheExpired() || getImageCache().size === 0) {
             await refreshImageCache();
         }
         // 서버 캐시 상태 확인
@@ -210,7 +210,7 @@ export function findImageForSpecimen(
 
 
 
-export function isCacheExpired(): boolean {
+export function isImageCacheExpired(): boolean {
     const now = new Date();
     return (now.getTime() - getLastCacheUpdate().getTime()) > CACHE_EXPIRY_MS;
 }
@@ -224,7 +224,7 @@ export function getCacheInfo(): {
     return {
         imageCount: getImageCache().size,
         lastUpdated: getLastCacheUpdate(),
-        isExpired: isCacheExpired(),
+        isExpired: isImageCacheExpired(),
         isInitializing: isInitializing()
     };
 }
