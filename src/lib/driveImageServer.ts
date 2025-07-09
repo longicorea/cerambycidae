@@ -1,23 +1,48 @@
 import {CollDataType, DriveImageInfo} from "@src/data/collData";
+declare global {
+    var __imageCache__: Map<string, DriveImageInfo> | undefined;
+    var __lastCacheUpdate__: Date | undefined;
+}
 
-let imageCache: Map<string, DriveImageInfo> = new Map();
-let lastCacheUpdate: Date = new Date(0);
-let isInitializing = false;
+if (!globalThis.__imageCache__) {
+    globalThis.__imageCache__ = new Map();
+    globalThis.__lastCacheUpdate__ = new Date(0);
+}
+
+
+export function getImageCache() {
+    return globalThis.__imageCache__!;
+}
+
+export function setImageCache(newCache: Map<string, DriveImageInfo>) {
+    globalThis.__imageCache__ = newCache;
+}
+
+export function getLastCacheUpdate() {
+    return globalThis.__lastCacheUpdate__!;
+}
+
+export function setLastCacheUpdate(date: Date) {
+    globalThis.__lastCacheUpdate__ = date;
+}
+
+export function isInitializing() {
+    return globalThis.__isInitializing__!;
+}
+
+export function setIsInitializing(value: boolean) {
+    globalThis.__isInitializing__ = value;
+}
+
 
 // 캐시 만료 시간 (1시간)
 const CACHE_EXPIRY_MS = 60 * 60 * 1000;
 
-export async function getImageCache(): Promise<Map<string, DriveImageInfo>> {
-    if (isCacheExpired() && !isInitializing) {
-        await refreshImageCache();
-    }
-    return imageCache;
-}
 
 export async function refreshImageCache() {
-    if (isInitializing) return;
-    
-    isInitializing = true;
+    if (isInitializing()) return;
+
+    setIsInitializing(true);
     console.log('Google Drive 이미지 캐시 갱신 시작...');
     let imageInfos: DriveImageInfo[] = [];
     try {
@@ -32,10 +57,10 @@ export async function refreshImageCache() {
             newCache.set(pathKey, imageInfo);
         });
         
-        imageCache = newCache;
-        lastCacheUpdate = new Date();
+        setImageCache(newCache);
+        setLastCacheUpdate(new Date());
         
-        console.log(`Google Drive 캐시 갱신 완료: ${imageCache.size}개 이미지`);
+        console.log(`Google Drive 캐시 갱신 완료: ${getImageCache().size}개 이미지`);
         
         // CollData에 이미지 URL 정보 추가
         await enrichCollDataWithImages();
@@ -44,7 +69,7 @@ export async function refreshImageCache() {
         console.error('Google Drive 캐시 갱신 실패:', error);
         throw error;
     } finally {
-        isInitializing = false;
+        setIsInitializing(false);
     }
     return imageInfos;
 
@@ -53,9 +78,10 @@ export async function refreshImageCache() {
 export async function enrichCollDataWithImages(): Promise<void> {
     try {
         const { getCachedCollectionData, updateServerCache, getServerCacheInfo } = await import('@src/lib/dataCacheServer');
-        
+        if (isCacheExpired() || getImageCache().size === 0) {
+            await refreshImageCache();
+        }
         // 서버 캐시 상태 확인
-        const cacheInfo = getServerCacheInfo();
         let collData: CollDataType[];
         collData = await getCachedCollectionData();
 
@@ -66,7 +92,7 @@ export async function enrichCollDataWithImages(): Promise<void> {
             const imageFiles: DriveImageInfo[] = [];
 
             // 해당 표본의 모든 이미지 찾기
-            imageCache.forEach((imageInfo, key) => {
+            getImageCache().forEach((imageInfo, key) => {
                 // coll_id로 매칭되는 이미지 찾기
                 if (imageInfo.name.toLowerCase().includes(specimen.coll_id.toLowerCase())) {
                     // 파일명 패턴 확인: {coll_id}_{type}_{parts}.jpg
@@ -158,7 +184,7 @@ export function findImageForSpecimen(
     
     for (const fileName of possibleFileNames) {
         const fullPath = `${basePath}/${fileName}`.toLowerCase();
-        const imageInfo = imageCache.get(fullPath);
+        const imageInfo = getImageCache().get(fullPath);
         
         if (imageInfo) {
             return imageInfo;
@@ -167,7 +193,7 @@ export function findImageForSpecimen(
     
     // 파일명만으로 검색 (하위 호환성)
     for (const fileName of possibleFileNames) {
-        const imageInfo = imageCache.get(fileName.toLowerCase());
+        const imageInfo = getImageCache().get(fileName.toLowerCase());
         
         if (imageInfo) {
             return imageInfo;
@@ -183,7 +209,7 @@ export function findImageForSpecimen(
 
 export function isCacheExpired(): boolean {
     const now = new Date();
-    return (now.getTime() - lastCacheUpdate.getTime()) > CACHE_EXPIRY_MS;
+    return (now.getTime() - getLastCacheUpdate().getTime()) > CACHE_EXPIRY_MS;
 }
 
 export function getCacheInfo(): {
@@ -193,9 +219,9 @@ export function getCacheInfo(): {
     isInitializing: boolean;
 } {
     return {
-        imageCount: imageCache.size,
-        lastUpdated: lastCacheUpdate,
+        imageCount: getImageCache().size,
+        lastUpdated: getLastCacheUpdate(),
         isExpired: isCacheExpired(),
-        isInitializing
+        isInitializing: isInitializing()
     };
 }
