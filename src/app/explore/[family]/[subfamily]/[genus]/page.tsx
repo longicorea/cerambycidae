@@ -9,16 +9,11 @@ import Breadcrumb from "@src/components/Breadcrumb";
 import {ExploreTitle} from "@src/components/ExploreTitle";
 import {ImageCard} from "@src/components/ImageCard";
 
-function LabelText({label, value}: { label: string, value: string | number }) {
-    return (
-        <div className={"grid grid-cols-4 items-center space-x-2"}>
-            <span className={"col-span-1 w-20"}>{label}</span>
-            <span
-                className={"col-span-3 text-gray-600 text-sm overflow-hidden text-nowrap text-ellipsis"}>{value}</span>
-        </div>
-    )
+const TypeMap = {
+    "Adult": "A",
+    "Larva": "L",
+    "Pupa": "P",
 }
-
 export default function GenusPage({params}: { params: { family: string, subfamily: string, genus: string } }) {
     const [collData, setCollData] = useState<CollDataType[]>([]);
     const [loading, setLoading] = useState(true);
@@ -72,11 +67,22 @@ export default function GenusPage({params}: { params: { family: string, subfamil
         })).map((species) => {
             const imageList = species.specimens.flatMap((specimen) => specimen.imageFiles)
             const representativeImageUrl = imageList.find(img => img?.name.includes("A_dorsal"))?.url || imageList[0]?.url
+            const typeList = new Set(imageList.map((image) => {
+                if (!image) return null;
+                const type = image.name.split('_')[1];
+                if (!type) return null;
+                return type
+            }))
+            const isDna = species.specimens.some((item => item.dna_identified));
 
-
+            if (isDna) {
+                typeList.add("D");
+            }
             return {
                 ...species,
-                representativeImageUrl
+                representativeImageUrl,
+                typeList: Array.from(typeList).filter(Boolean) as string[],
+
             };
         })
         return result;
@@ -109,7 +115,8 @@ export default function GenusPage({params}: { params: { family: string, subfamil
                                 <ImageCard
                                     href={`/explore/${encodeURIComponent(familyName)}/${encodeURIComponent(subfamilyName)}/${encodeURIComponent(genusName)}/${encodeURIComponent(speciesKey.speciesName)}`}
                                     imageUrl={speciesKey.representativeImageUrl}
-                                    description={speciesName}/>
+                                    description={speciesName}
+                                    badge={speciesKey.typeList}/>
 
                             );
                         }}

@@ -91,7 +91,8 @@ export default function SpeciesPage({params}: {
                 <ExploreTitle title={`${genusName} ${speciesName}`} subtitle={"Species"}/>
                 <div className={"flex flex-row  space-x-8"}>
                     <div className={"flex flex-row space-x-4 min-h-[900px] min-w-[900px]"}>
-                        <div className={"w-full h-full border border-gray-300 rounded-md overflow-hidden"}>
+                        <div
+                            className={"w-full h-full border border-gray-300 rounded-md overflow-hidden max-w-[900px]"}>
                             <TransformWrapper
                                 initialScale={1}
                                 minScale={1}
@@ -104,11 +105,12 @@ export default function SpeciesPage({params}: {
 
 
                                     <div className="flex-1 relative">
+                                        
                                         <TransformComponent wrapperClass="w-full h-full">
                                             <img
                                                 src={selectedSpecimenInfo?.imageUrl ?? ''}
                                                 alt="Specimen"
-                                                className="min-h-[900px] min-w-[900px] object-contain mx-auto"
+                                                className="min-h-[900px] min-w-[900px] max-w-[900px] object-contain mx-auto"
                                             />
                                         </TransformComponent>
                                     </div>

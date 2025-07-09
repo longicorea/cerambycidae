@@ -100,11 +100,17 @@ export default function HomePage() {
             <div className={"flex flex-wrap gap-2 justify-start "}>
                 <For of={dataList}>
                     {(data) => {
+                        const typeSet = new Set((data?.imageFiles ?? []).map((img => img.name.split('_')[1])))
+                        if (data.dna_identified) {
+                            typeSet.add("D");
+                        }
+                        const types = Array.from(typeSet).filter(Boolean);
                         return (
                             <ImageCard
                                 href={`/explore/${encodeURIComponent(data.family_name)}/${encodeURIComponent(data.subfamily_name)}/${encodeURIComponent(data.genus_name)}/${encodeURIComponent(data.species_name)}`}
                                 imageUrl={(data.imageFiles ?? []).find(img => img.name.includes("A_dorsal"))?.url}
-                                description={data.genus_name + " " + data.species_name}/>
+                                description={data.genus_name + " " + data.species_name}
+                                badge={types ?? []}/>
                         )
                     }}
                 </For>
