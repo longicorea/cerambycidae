@@ -65,7 +65,9 @@ async function fetchCollectionData(): Promise<CollDataType[]> {
         throw new Error('데이터 가져오기 실패');
     }
     console.log('클라이언트에서 API로 데이터 가져오기 성공');
-    return await response.json();
+    const result = await response.json()
+    console.log(result)
+    return result;
 }
 
 // 클라이언트 캐시 강제 갱신 함수

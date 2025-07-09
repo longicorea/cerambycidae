@@ -14,15 +14,15 @@ export async function getImageCache(): Promise<Map<string, DriveImageInfo>> {
     return imageCache;
 }
 
-export async function refreshImageCache(): Promise<void> {
+export async function refreshImageCache() {
     if (isInitializing) return;
     
     isInitializing = true;
     console.log('Google Drive 이미지 캐시 갱신 시작...');
-    
+    let imageInfos: DriveImageInfo[] = [];
     try {
         
-        const imageInfos = await fetchR2Images();
+        imageInfos = await fetchR2Images();
         
         // 새로운 캐시 맵 생성
         const newCache = new Map<string, DriveImageInfo>();
@@ -46,6 +46,8 @@ export async function refreshImageCache(): Promise<void> {
     } finally {
         isInitializing = false;
     }
+    return imageInfos;
+
 }
 
 export async function enrichCollDataWithImages(): Promise<void> {
