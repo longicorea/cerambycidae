@@ -13,7 +13,7 @@ function SpecimenImage({imageUrl, alt}: { imageUrl: string | undefined; alt?: st
     if (!imageUrl) {
         return (
             <div className="w-full h-full bg-slate-50 rounded flex items-center justify-center">
-                <span className="text-gray-500 text-sm">이미지 없음</span>
+                <span className="text-gray-500 text-sm">No Image</span>
             </div>
         );
     }

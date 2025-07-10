@@ -2,6 +2,7 @@
 
 import {useEffect, useRef, useState} from "react";
 import {CollDataType} from "@src/data/collData";
+import {When} from "react-if";
 
 interface AutocompleteSearchProps {
     collData: CollDataType[];
@@ -158,10 +159,9 @@ export default function AutocompleteSearch({
                 onFocus={handleInputFocus}
                 onBlur={handleInputBlur}
                 placeholder={placeholder}
-                className="shadow-[0px_0px_20px_2px_#dfe5ed] rounded-full h-14 w-full text-[22px] font-light px-6 text-gray-600 focus:outline-none focus:border-inherit focus:ring-0"
+                className="shadow-[0px_0px_20px_2px_#dfe5ed] rounded-full h-14 w-full text-[22px] font-light px-6 text-gray-600 placeholder:font-thin placeholder:text-base focus:outline-none focus:border-inherit focus:ring-0"
             />
-
-            {showSuggestions && suggestions.length > 0 && (
+            <When condition={showSuggestions && suggestions.length > 0}>
                 <div
                     className="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg max-h-60 overflow-y-auto">
                     {suggestions.map((suggestion, index) => (
@@ -180,7 +180,7 @@ export default function AutocompleteSearch({
                         </div>
                     ))}
                 </div>
-            )}
+            </When>
         </div>
     );
 }

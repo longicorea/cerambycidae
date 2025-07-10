@@ -89,11 +89,11 @@ export default function HomePage() {
 
     return (
         <DefaultSection>
-            <div className={"flex justify-center py-8"}>
+            <div className={"flex justify-center py-8 my-8 mb-16"}>
                 <AutocompleteSearch
                     collData={collData}
                     onSearch={setSearchText}
-                    placeholder="과명, 속명, 종명, 국명으로 검색..."
+                    placeholder="Search by taxonomy or Korean name."
                     className="w-1/2"
                 />
             </div>
