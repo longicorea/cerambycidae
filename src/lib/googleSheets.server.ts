@@ -1,8 +1,8 @@
 // 서버 전용 Google Sheets API 모듈
 // 이 파일은 서버사이드에서만 사용됩니다.
 
-import { google } from 'googleapis';
-import { CollDataType } from '@src/data/collData';
+import {google} from 'googleapis';
+import {CollDataType} from '@src/data/collData';
 
 export async function getCollectionData(): Promise<CollDataType[]> {
     try {
@@ -22,7 +22,7 @@ export async function getCollectionData(): Promise<CollDataType[]> {
             scopes: ['https://www.googleapis.com/auth/spreadsheets.readonly'],
         });
 
-        const sheets = google.sheets({ version: 'v4', auth });
+        const sheets = google.sheets({version: 'v4', auth});
         const spreadsheetId = process.env.GOOGLE_SHEET_ID;
 
         if (!spreadsheetId) {
@@ -42,24 +42,26 @@ export async function getCollectionData(): Promise<CollDataType[]> {
 
         // 첫 번째 행은 헤더이므로 제외
         const dataRows = rows.slice(1);
-        
+
         const collectionData: CollDataType[] = dataRows.map((row, index) => ({
             id: String(index + 1),
             coll_id: row[1] || '',
             type: row[2] || '',
             dna_identified: row[3] || '',
             dna_accession_no: row[4] || '',
-            coll_date: row[5] || '',
-            collector_name: row[6] || '',
-            family_name: row[7] || '',
-            subfamily_name: row[8] || '',
-            genus_name: row[9] || '',
-            species_name: row[10] || '',
-            subspecies_name: row[11] || '',
-            name_ko: row[12] || '',
-            location: row[13] || '',
-            host: row[14] || '',
-            is_hidden: row[15] === 'TRUE' || row[15] === 'true' || row[15] === '1',
+            seq_identifier: row[5] || '',
+            coll_date: row[6] || '',
+            collector_name: row[7] || '',
+            family_name: row[8] || '',
+            subfamily_name: row[9] || '',
+            tribe_name: row[10] || '',
+            genus_name: row[11] || '',
+            species_name: row[12] || '',
+            subspecies_name: row[13] || '',
+            name_ko: row[14] || '',
+            location: row[15] || '',
+            host: row[16] || '',
+            is_hidden: row[17] === 'TRUE' || row[15] === 'true' || row[15] === '1',
         }));
 
         console.log(`Google Sheets에서 ${collectionData.length}개 데이터 로드 완료`);

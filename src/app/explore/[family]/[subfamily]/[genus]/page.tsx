@@ -84,7 +84,9 @@ export default function GenusPage({params}: { params: { family: string, subfamil
                 typeList: Array.from(typeList).filter(Boolean) as string[],
 
             };
-        })
+        }).sort((a, b) => {
+            return a.speciesName.localeCompare(b.speciesName)
+        });
         return result;
     }, [speciesGroups]);
 

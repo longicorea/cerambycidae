@@ -53,7 +53,9 @@ export default function SubfamilyPage({params}: { params: { family: string, subf
                 ...genus,
                 representativeImageUrl
             };
-        })
+        }).sort((a, b) => {
+            return a.genusName.localeCompare(b.genusName)
+        });
         return result;
     }, [subfamilyData]);
 
@@ -83,17 +85,18 @@ export default function SubfamilyPage({params}: { params: { family: string, subf
                 <Breadcrumb familyName={familyName} subfamilyName={subfamilyName}/>
                 <ExploreTitle title={subfamilyName} subtitle={"Subfamily"}/>
 
+                <div className={"h-[800px] overflow-scroll"}>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 ">
+                        <For of={genera}>
+                            {(genus) => (
+                                <ImageCard
+                                    href={`/explore/${encodeURIComponent(familyName)}/${encodeURIComponent(subfamilyName)}/${encodeURIComponent(genus.genusName)}`}
+                                    imageUrl={genus.representativeImageUrl}
+                                    description={genus.genusName}/>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    <For of={genera}>
-                        {(genus) => (
-                            <ImageCard
-                                href={`/explore/${encodeURIComponent(familyName)}/${encodeURIComponent(subfamilyName)}/${encodeURIComponent(genus.genusName)}`}
-                                imageUrl={genus.representativeImageUrl}
-                                description={genus.genusName}/>
-
-                        )}
-                    </For>
+                            )}
+                        </For>
+                    </div>
                 </div>
             </div>
         </DefaultSection>

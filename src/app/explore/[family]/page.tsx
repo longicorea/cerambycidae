@@ -49,7 +49,9 @@ export default function FamilyPage({params}: { params: { family: string } }) {
                 ...subfamily,
                 representativeImageUrl
             };
-        })
+        }).sort((a, b) => {
+            return a.subFamilyName.localeCompare(b.subFamilyName)
+        });
         return result;
     }, [collData]);
 

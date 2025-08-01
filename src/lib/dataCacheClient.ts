@@ -1,5 +1,6 @@
 // 클라이언트 전용 데이터 캐시
 import {CollDataType} from "@src/data/collData";
+import localforage from "localforage";
 
 const CACHE_KEY = 'collection_data_cache';
 const CACHE_EXPIRY_MS = 60 * 60 * 1000; // 60분
@@ -11,11 +12,11 @@ interface CacheData {
 
 export async function getCachedCollectionData(): Promise<CollDataType[]> {
     try {
-        // localStorage에서 캐시된 데이터 확인
+
         const hash = typeof window === "undefined" ? "" : (window?.document?.location?.hash ?? "")
         const isRefreshCache = (hash === "#r");
         console.log('클라이언트 캐시 상태 조회:', isRefreshCache ? '캐시 강제 갱신' : '캐시 조회');
-        const cachedDataString = localStorage.getItem(CACHE_KEY);
+        const cachedDataString = await localforage.getItem(CACHE_KEY) as string;
         const now = Date.now();
 
         console.log('클라이언트 캐시 조회:', cachedDataString ? '캐시 있음' : '캐시 없음');
@@ -30,7 +31,14 @@ export async function getCachedCollectionData(): Promise<CollDataType[]> {
                             data: freshData,
                             timestamp: Date.now()
                         };
-                        localStorage.setItem(CACHE_KEY, JSON.stringify(newCache));
+
+                        localforage.setItem(CACHE_KEY, JSON.stringify(newCache))
+                            .then(() => {
+                                console.log('백그라운드 캐시 갱신 완료');
+                            })
+                            .catch(err => {
+                                console.warn('IndexedDB 캐시 갱신 실패:', err);
+                            });
                         console.log('백그라운드 캐시 갱신 완료');
                     })
                     .catch(err => {
@@ -50,8 +58,13 @@ export async function getCachedCollectionData(): Promise<CollDataType[]> {
             data: freshData,
             timestamp: now
         };
-
-        localStorage.setItem(CACHE_KEY, JSON.stringify(newCacheData));
+        localforage.setItem(CACHE_KEY, JSON.stringify(newCacheData))
+            .then(() => {
+                console.log('백그라운드 캐시 갱신 완료');
+            })
+            .catch(err => {
+                console.warn('IndexedDB 캐시 갱신 실패:', err);
+            });
 
         return freshData;
 
@@ -59,7 +72,7 @@ export async function getCachedCollectionData(): Promise<CollDataType[]> {
         console.error('클라이언트 데이터 가져오기 실패:', error);
 
         // 에러 발생시 캐시된 데이터라도 반환
-        const cachedDataString = localStorage.getItem(CACHE_KEY);
+        const cachedDataString = await localforage.getItem(CACHE_KEY) as string;
         if (cachedDataString) {
             const cachedData: CacheData = JSON.parse(cachedDataString);
             console.log('에러 발생으로 클라이언트 캐시된 데이터 사용');
@@ -81,35 +94,4 @@ async function fetchCollectionData(): Promise<CollDataType[]> {
     const result = await response.json()
     console.log(result)
     return result;
-}
-
-// 클라이언트 캐시 강제 갱신 함수
-export async function refreshCollectionData(): Promise<CollDataType[]> {
-    localStorage.removeItem(CACHE_KEY);
-    return await getCachedCollectionData();
-}
-
-// 클라이언트 캐시 삭제 함수
-export function clearCollectionDataCache(): void {
-    localStorage.removeItem(CACHE_KEY);
-}
-
-// 클라이언트 캐시 상태 조회 함수
-export function getClientCacheInfo(): { hasCache: boolean, timestamp: number | null, age: number | null } {
-    const cachedDataString = localStorage.getItem(CACHE_KEY);
-
-    if (!cachedDataString) {
-        return {hasCache: false, timestamp: null, age: null};
-    }
-
-    try {
-        const cachedData: CacheData = JSON.parse(cachedDataString);
-        return {
-            hasCache: true,
-            timestamp: cachedData.timestamp,
-            age: Date.now() - cachedData.timestamp
-        };
-    } catch {
-        return {hasCache: false, timestamp: null, age: null};
-    }
 }

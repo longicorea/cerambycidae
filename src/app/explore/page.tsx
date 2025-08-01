@@ -43,7 +43,9 @@ export default function ExplorePage() {
                 ...family,
                 representativeImageUrl
             };
-        })
+        }).sort((a, b) => {
+            return a.familyName.localeCompare(b.familyName)
+        });
         return result;
     }, [collData]);
 

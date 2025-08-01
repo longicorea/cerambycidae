@@ -21,6 +21,7 @@ export default function HomePage() {
         const fetchData = async () => {
             try {
                 // 컬렉션 데이터 로드
+                console.log("컬렉션 데이터 로드")
                 const data = await getCachedCollectionData();
                 console.log(data)
                 setCollData(data);
@@ -55,7 +56,9 @@ export default function HomePage() {
 
     const dataList = useMemo(() => {
         if (!searchText) {
+            
             const randomItems: CollDataType[] = _.sampleSize(collData, 10);
+            console.log(randomItems)
             return randomItems
         } else {
             return collData.filter((item) => {
@@ -108,7 +111,7 @@ export default function HomePage() {
                         return (
                             <ImageCard
                                 href={`/explore/${encodeURIComponent(data.family_name)}/${encodeURIComponent(data.subfamily_name)}/${encodeURIComponent(data.genus_name)}/${encodeURIComponent(data.species_name)}`}
-                                imageUrl={(data.imageFiles ?? []).find(img => img.name.includes("A_dorsal"))?.url}
+                                imageUrl={(data.imageFiles ?? []).find(img => img.name.includes("A_dorsal"))?.url || (data.imageFiles ?? [])[0]?.url}
                                 description={data.genus_name + " " + data.species_name}
                                 badge={types ?? []}/>
                         )
