@@ -106,7 +106,7 @@ export default function GenusPage({params}: { params: { family: string, subfamil
                 <Breadcrumb familyName={familyName} subfamilyName={subfamilyName} genusName={genusName}/>
                 <ExploreTitle title={genusName} subtitle={"Genus"}/>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div className="flex flex-wrap gap-4 justify-start">
                     <For of={species}>
                         {(speciesKey) => {
                             const speciesData = speciesGroups[speciesKey.speciesName]!;

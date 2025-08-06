@@ -6,12 +6,28 @@ import _ from "lodash";
 import {For} from "react-loops";
 
 import DefaultSection from "@src/components/section/DefaultSection";
-import {CollDataType} from "@src/data/collData";
+import {CollDataType, DriveImageInfo} from "@src/data/collData";
 import {getCachedCollectionData} from "@src/lib/dataCacheClient";
 import AutocompleteSearch from "@src/components/AutocompleteSearch";
 import {ImageCard} from "@src/components/ImageCard";
 
 
+const preferredOrder = ["L_dorsal", "P_ventral"];
+
+// normalize 함수: 대소문자 무시 + 구분자 통일
+const normalize = (str: string) =>
+    str.toLowerCase().replace(/[_\-\s]+/g, "_");
+
+const getPreferredImageUrl = (thumbnailList: DriveImageInfo[]) => {
+    for (const keyword of preferredOrder) {
+        const normalizedKeyword = normalize(keyword);
+        const match = thumbnailList.find((img) =>
+            normalize(img.name).includes(normalizedKeyword)
+        );
+        if (match) return match.url;
+    }
+    return thumbnailList[0]?.url!;
+};
 export default function HomePage() {
     const [searchText, setSearchText] = useState("");
     const [collData, setCollData] = useState<CollDataType[]>([]);
@@ -21,9 +37,7 @@ export default function HomePage() {
         const fetchData = async () => {
             try {
                 // 컬렉션 데이터 로드
-                console.log("컬렉션 데이터 로드")
                 const data = await getCachedCollectionData();
-                console.log(data)
                 setCollData(data);
             } catch (error) {
                 console.error('데이터 로드 실패:', error);
@@ -55,13 +69,9 @@ export default function HomePage() {
     };
 
     const dataList = useMemo(() => {
-        if (!searchText) {
-            
-            const randomItems: CollDataType[] = _.sampleSize(collData, 10);
-            console.log(randomItems)
-            return randomItems
-        } else {
-            return collData.filter((item) => {
+        const filtered = !searchText
+            ? _.sampleSize(collData, 20)
+            : collData.filter((item) => {
                 const fields = [
                     item.host,
                     item.coll_id,
@@ -73,10 +83,26 @@ export default function HomePage() {
                     item.subfamily_name,
                     `${item.genus_name} ${item.species_name}`,
                 ];
+                return fields.some(
+                    (field) => field && fuzzyMatch(searchText, field)
+                );
+            });
 
-                return fields.some(field => field && fuzzyMatch(searchText, field));
-            }).slice(0, 10)
-        }
+        // 종 기준으로 그룹핑
+        const grouped = _.groupBy(filtered, (item) =>
+            `${item.genus_name} ${item.species_name}`.trim()
+        );
+
+        // 그룹을 종합 객체로 변환
+        const merged = Object.entries(grouped).map(([key, items]) => {
+            return {
+                genus_name: items[0]!.genus_name,
+                species_name: items[0]!.species_name,
+                items, // 같은 종의 모든 원본 데이터 배열
+            };
+        });
+
+        return merged.slice(0, 20);
     }, [searchText, collData])
 
 
@@ -92,26 +118,33 @@ export default function HomePage() {
 
     return (
         <DefaultSection>
-            <div className={"flex justify-center py-8 my-8 mb-16"}>
+            <div className={"flex justify-center py-8 my-8 mb-16 "}>
                 <AutocompleteSearch
                     collData={collData}
                     onSearch={setSearchText}
                     placeholder="Search by taxonomy or Korean name."
-                    className="w-1/2"
+                    className="w-1/2 max-w-[800px]"
                 />
             </div>
-            <div className={"flex flex-wrap gap-2 justify-start "}>
+            <div className={"flex flex-wrap gap-4 justify-center max-h-[1000px] overflow-y-scroll"}>
                 <For of={dataList}>
                     {(data) => {
-                        const typeSet = new Set((data?.imageFiles ?? []).map((img => img.name.split('_')[1])))
-                        if (data.dna_identified) {
+                        const imageFiles = data.items.flatMap(item => item.imageFiles ?? []);
+                        const dnaIdentified = data.items.some(item => item.dna_identified === "TRUE");
+                        const familyName = data.items[0]?.family_name || "";
+                        const subfamilyName = data.items[0]?.subfamily_name || "";
+                        const genusName = data.items[0]?.genus_name || "";
+                        const speciesName = data.items[0]?.species_name || "";
+                        const typeSet = new Set(imageFiles.map((img => img.name.split('_')[1])))
+                        const thumbnailList = imageFiles.filter((img) => img.name.includes("thumbnail"))
+                        if (dnaIdentified) {
                             typeSet.add("D");
                         }
                         const types = Array.from(typeSet).filter(Boolean);
                         return (
                             <ImageCard
-                                href={`/explore/${encodeURIComponent(data.family_name)}/${encodeURIComponent(data.subfamily_name)}/${encodeURIComponent(data.genus_name)}/${encodeURIComponent(data.species_name)}`}
-                                imageUrl={(data.imageFiles ?? []).find(img => img.name.includes("A_dorsal"))?.url || (data.imageFiles ?? [])[0]?.url}
+                                href={`/explore/${encodeURIComponent(familyName)}/${encodeURIComponent(subfamilyName)}/${encodeURIComponent(genusName)}/${encodeURIComponent(speciesName)}`}
+                                imageUrl={getPreferredImageUrl(thumbnailList)}
                                 description={data.genus_name + " " + data.species_name}
                                 badge={types ?? []}/>
                         )

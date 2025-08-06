@@ -85,8 +85,8 @@ export default function SubfamilyPage({params}: { params: { family: string, subf
                 <Breadcrumb familyName={familyName} subfamilyName={subfamilyName}/>
                 <ExploreTitle title={subfamilyName} subtitle={"Subfamily"}/>
 
-                <div className={"h-[800px] overflow-scroll"}>
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 ">
+                <div className={"h-[800px] overflow-y-scroll"}>
+                    <div className="flex flex-wrap gap-4 justify-start">
                         <For of={genera}>
                             {(genus) => (
                                 <ImageCard

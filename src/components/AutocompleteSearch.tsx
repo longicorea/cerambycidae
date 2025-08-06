@@ -26,7 +26,6 @@ export default function AutocompleteSearch({
 
     // 퍼지 매칭 함수 - 부분 문자열과 순서가 맞는 문자들을 찾음
     const fuzzyMatch = (searchTerm: string, target: string): boolean => {
-        console.log(`Fuzzy matching: "${searchTerm}" in "${target}"`);
         const search = searchTerm.toLowerCase();
         const text = target.toLowerCase();
 
@@ -49,7 +48,6 @@ export default function AutocompleteSearch({
             const suggestionMap = new Map<string, number>();
 
             collData.forEach(item => {
-                console.log(collData)
                 const fields = [
                     item.name_ko,
                     item.genus_name,
@@ -159,7 +157,7 @@ export default function AutocompleteSearch({
                 onFocus={handleInputFocus}
                 onBlur={handleInputBlur}
                 placeholder={placeholder}
-                className="shadow-[0px_0px_20px_2px_#dfe5ed] rounded-full h-14 w-full text-[22px] font-light px-6 text-gray-600 placeholder:font-thin placeholder:text-base focus:outline-none focus:border-inherit focus:ring-0"
+                className="shadow-[0px_0px_20px_2px_#dfe5ed] rounded-full h-14 w-full text-[26px] font-light px-6 text-gray-600 placeholder:font-thin placeholder:text-base focus:outline-none focus:border-inherit focus:ring-0"
             />
             <When condition={showSuggestions && suggestions.length > 0}>
                 <div

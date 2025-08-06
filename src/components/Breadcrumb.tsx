@@ -4,11 +4,11 @@ import {When} from "react-if";
 function BreadcrumbLink({href, name, isLast}: { href: string; name?: string, isLast?: boolean }) {
     return (
         <When condition={!!name}>
-            <Link href={href} className={isLast ? "text-slate-500 text-sm underline" : "text-slate-300 text-xs"}>
+            <Link href={href} className={isLast ? "text-slate-500 text-base underline" : "text-slate-300 text-sm"}>
                 {name}
             </Link>
             <When condition={!isLast}>
-                <span className="text-slate-300 text-xs">{'>'}</span>
+                <span className="text-slate-300 text-sm">{'>'}</span>
             </When>
         </When>)
 }

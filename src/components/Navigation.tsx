@@ -12,7 +12,7 @@ function MenuLink({targetUrl, label}: { targetUrl: string, label: string }) {
     return (
         <Link
             href={targetUrl}
-            className={`text-sm font-base transition-colors ${
+            className={`text-base font-base transition-colors ${
                 isActive ? 'text-slate-800 font-medium' : 'text-slate-400 hover:text-slate-700'
             }`}
         >
@@ -22,11 +22,11 @@ function MenuLink({targetUrl, label}: { targetUrl: string, label: string }) {
 
 export default function Navigation() {
     return (
-        <nav className="h-16 bg-white ">
-            <div className="max-w-7xl mx-auto px-10  h-full flex flex-row items-center w-full ">
-                <div className="flex flex-row justify-between items-center w-full ">
+        <nav className="h-16 bg-white  ">
+            <div className="w-full mx-auto px-4  h-full flex flex-row items-center justify-center ">
+                <div className="w-[1280px] flex flex-row justify-between items-center  ">
                     <div className="flex items-center">
-                        <Link href="/" className="text-xl font-bold text-gray-900">
+                        <Link href="/" className="text-2xl font-bold text-gray-900">
                             IMMATURE DB
                         </Link>
                     </div>

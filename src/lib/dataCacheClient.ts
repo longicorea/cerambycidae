@@ -92,6 +92,5 @@ async function fetchCollectionData(): Promise<CollDataType[]> {
     }
     console.log('클라이언트에서 API로 데이터 가져오기 성공');
     const result = await response.json()
-    console.log(result)
     return result;
 }

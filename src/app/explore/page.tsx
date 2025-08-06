@@ -17,7 +17,6 @@ export default function ExplorePage() {
         const fetchData = async () => {
             try {
                 const data = await getCachedCollectionData();
-                console.log(data)
                 setCollData(data);
             } catch (error) {
                 console.error('데이터 로드 실패:', error);

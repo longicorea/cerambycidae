@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 
 const BadgeColor = {
     A: "bg-yellow-400",
@@ -19,13 +20,15 @@ function SpecimenImage({imageUrl, alt}: { imageUrl: string | undefined; alt?: st
     }
 
     return (
-        <img
+        <Image
             src={imageUrl}
-            alt={alt}
+            alt={alt ?? 'Specimen Image'}
             className="w-full h-full object-cover rounded"
             onError={(e) => {
                 (e.target as HTMLImageElement).style.display = 'none';
             }}
+            fill
+            sizes={"(max-width: 300px) 100vw, 300px"}
         />
     );
 }
@@ -44,10 +47,9 @@ export function ImageCard({
     return (
         <Link
             href={href}
-            className="block bg-slate-50 rounded-lg hover:bg-gray-100 transition-colors overflow-hidden min-w-[300px] max-w-[300px]"
+            className="block bg-slate-50 rounded-lg hover:bg-gray-100  overflow-hidden min-w-[280px] max-w-[280px]  transform hover:scale-105 transition-transform duration-300 ease-in-out"
         >
-            <div className="flex flex-col space-y-2 justify-end items-center p-4 rounded-2xl h-96 min-w-[300px]">
-                {/* 이미지 영역 */}
+            <div className="flex flex-col space-y-2 justify-end items-center p-4 rounded-2xl h-96 min-w-[280px] ">
                 <div className="relative grid grid-cols-1 gap-3 h-96 overflow-hidden w-full">
                     <SpecimenImage imageUrl={imageUrl}/>
 
@@ -66,10 +68,11 @@ export function ImageCard({
                 </div>
 
                 {/* 설명 */}
-                <div className="grid w-full justify-center items-start gap-2 text-gray-600">
-          <span>
-            <i>{description}</i>
-          </span>
+                <div
+                    className="w-full justify-center items-start text-gray-600 text-lg text-nowrap text-ellipsis overflow-hidden">
+                  <span>
+                    <i>{description}</i>
+                  </span>
                 </div>
             </div>
         </Link>
