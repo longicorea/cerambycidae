@@ -64,7 +64,7 @@ export function ImageCard({
                                 >
                                     <Switch>
                                         <Case condition={b == 'D'}>
-                                            <Image src={"/icon/dna2.svg"} alt={"DNA"} width={22} height={22}/>
+                                            <Image src={"/icons/dna2.svg"} alt={"DNA"} width={22} height={22}/>
                                         </Case>
                                         <Default>
                                             {b}
