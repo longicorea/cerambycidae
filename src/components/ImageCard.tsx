@@ -1,11 +1,13 @@
 import Link from "next/link";
 import Image from "next/image";
+import {Case, Default, Switch} from "react-if";
+import React from "react";
 
 const BadgeColor = {
     A: "bg-yellow-400",
     L: "bg-emerald-400",
     P: "bg-blue-400",
-    D: "bg-red-400",
+    D: "bg-gray-100",
 }
 
 function SpecimenImage({imageUrl, alt}: { imageUrl: string | undefined; alt?: string }) {
@@ -60,7 +62,16 @@ export function ImageCard({
                                     key={idx}
                                     className={`${BadgeColor[b!]} w-7 h-7 rounded-full  text-white text-xs font-bold flex items-center justify-center shadow-md`}
                                 >
-                                    {b}
+                                    <Switch>
+                                        <Case condition={b == 'D'}>
+                                            <Image src={"/icon/dna2.svg"} alt={"DNA"} width={22} height={22}/>
+                                        </Case>
+                                        <Default>
+                                            {b}
+                                        </Default>
+                                    </Switch>
+
+
                                 </div>
                             ))}
                         </div>
