@@ -50,28 +50,42 @@ export default function HomePage() {
     }, []);
 
     // 퍼지 매칭 함수 - 부분 문자열과 순서가 맞는 문자들을 찾음
-    const fuzzyMatch = (searchTerm: string, target: string): boolean => {
+    const fuzzyMatchScore = (searchTerm: string, target: string): number => {
         const search = searchTerm.toLowerCase();
         const text = target.toLowerCase();
 
-        // 완전 포함 검사 (기존 방식)
-        if (text.includes(search)) return true;
+        if (text.includes(search)) return 100; // 완전 포함 시 최고 점수
 
-        // 순서가 맞는 부분 문자열 검사
         let searchIndex = 0;
+        let matchCount = 0;
+
         for (let i = 0; i < text.length && searchIndex < search.length; i++) {
             if (text[i] === search[searchIndex]) {
                 searchIndex++;
+                matchCount++;
             }
         }
 
-        return searchIndex === search.length;
+        return searchIndex === search.length ? matchCount : 0;
     };
-
     const dataList = useMemo(() => {
-        const filtered = !searchText
-            ? _.sampleSize(collData, 20)
-            : collData.filter((item) => {
+        if (!searchText) {
+            // 검색어가 없을 경우 랜덤 20개
+            return _.chain(collData)
+                .sampleSize(20)
+                .groupBy(item => `${item.genus_name} ${item.species_name}`.trim())
+                .map((items, key) => ({
+                    genus_name: items[0]!.genus_name,
+                    species_name: items[0]!.species_name,
+                    items,
+                    score: 0,
+                }))
+                .value();
+        }
+
+        // 점수 계산
+        const scored = collData
+            .map(item => {
                 const fields = [
                     item.host,
                     item.coll_id,
@@ -83,27 +97,30 @@ export default function HomePage() {
                     item.subfamily_name,
                     `${item.genus_name} ${item.species_name}`,
                 ];
-                return fields.some(
-                    (field) => field && fuzzyMatch(searchText, field)
+
+                const maxScore = Math.max(
+                    ...fields.map(field => (field ? fuzzyMatchScore(searchText, field) : 0))
                 );
-            });
 
-        // 종 기준으로 그룹핑
-        const grouped = _.groupBy(filtered, (item) =>
-            `${item.genus_name} ${item.species_name}`.trim()
-        );
+                return {...item, score: maxScore};
+            })
+            .filter(item => item.score > 0); // 점수가 0 이상인 항목만
 
-        // 그룹을 종합 객체로 변환
-        const merged = Object.entries(grouped).map(([key, items]) => {
-            return {
+        // 종 기준으로 그룹핑 및 최고 점수 추출
+        const grouped = _.chain(scored)
+            .groupBy(item => `${item.genus_name} ${item.species_name}`.trim())
+            .map((items, key) => ({
                 genus_name: items[0]!.genus_name,
                 species_name: items[0]!.species_name,
-                items, // 같은 종의 모든 원본 데이터 배열
-            };
-        });
+                items,
+                score: Math.max(...items.map(i => i.score)), // 그룹 내 최고 점수
+            }))
+            .orderBy('score', 'desc')
+            .take(20)
+            .value();
 
-        return merged.slice(0, 20);
-    }, [searchText, collData])
+        return grouped;
+    }, [searchText, collData]);
 
 
     if (loading) {

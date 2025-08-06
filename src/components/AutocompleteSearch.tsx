@@ -72,7 +72,7 @@ export default function AutocompleteSearch({
                 .sort((a, b) => b[1] - a[1])
                 .map(([suggestion]) => suggestion)
                 .slice(0, 8);
-
+       
             setSuggestions(filteredSuggestions);
             setShowSuggestions(filteredSuggestions.length > 0);
             setSelectedIndex(-1);
