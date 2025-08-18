@@ -47,7 +47,6 @@ export default function Navigation() {
                             </div>
                         </div>
                         <MenuLink targetUrl={"/explore"} label={"Explore"}/>
-                        <MenuLink targetUrl={"/about"} label={"About"}/>
                     </div>
                 </div>
             </div>
