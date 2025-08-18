@@ -1,6 +1,8 @@
 import {NextResponse} from 'next/server';
 import {getCachedCollectionData} from '@src/lib/dataCacheServer';
 
+export const runtime = 'nodejs';
+
 export async function GET() {
     try {
         // 서버 캐시를 통해 데이터 가져오기
