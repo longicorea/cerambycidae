@@ -1,18 +1,18 @@
 'use client'
 
 import {useEffect, useMemo, useState} from "react";
-import {For} from "react-loops";
 import DefaultSection from "@src/components/section/DefaultSection";
 import {CollDataType} from "@src/data/collData";
 import {getCachedCollectionData} from "@src/lib/dataCacheClient";
 import Breadcrumb from "@src/components/Breadcrumb";
 import {TransformComponent, TransformWrapper} from "react-zoom-pan-pinch";
 import {ExploreTitle} from "@src/components/ExploreTitle";
+import {For} from "react-loops";
 import Image from "next/image";
 
 function LabelText({label, value}: { label: string, value: string | number }) {
     return (
-        <div className={"grid grid-cols-4 items-center space-x-2"}>
+        <div className={"grid grid-cols-4 items-center space-x-2 hover:bg-slate-800"}>
             <span className={"col-span-2 w-20 text-slate-700 font-medium dark:text-slate-300"}>{label}</span>
             <span
                 className={"col-span-2 font-light text-slate-600 text-sm overflow-hidden text-nowrap text-ellipsis dark:text-slate-300"}>{value}</span>
@@ -89,7 +89,7 @@ export default function SpeciesPage({params}: {
                             speciesName={speciesName}/>
                 <ExploreTitle title={`${genusName} ${speciesName}`} subtitle={"Species"}/>
                 <div className={"flex flex-row  space-x-8"}>
-                    <div className={"flex flex-row space-x-4 min-h-[900px] min-w-[1000px]"}>
+                    <div className={"flex flex-row space-x-4 min-h-[900px] min-w-[900px]"}>
                         <div
                             className={"w-full h-full border border-gray-300 rounded-md overflow-hidden max-w-[1000px] dark:border-gray-900"}>
                             <TransformWrapper
@@ -118,7 +118,12 @@ export default function SpeciesPage({params}: {
                                 )}
                             </TransformWrapper>
                         </div>
-                        <div className={"flex flex-col space-y-2 "}>
+
+                    </div>
+
+
+                    <div className="space-y-6 min-w-[250px]">
+                        <div className={"grid grid-cols-3 gap-1 max-h-96 overflow-hidden overflow-y-scroll"}>
                             <For of={speciesImageInfo}>
                                 {(imageInfo, {index}) => (
                                     <button
@@ -134,22 +139,19 @@ export default function SpeciesPage({params}: {
 
                             </For>
                         </div>
-                    </div>
-
-
-                    <div className="space-y-2 min-w-[250px]">
-                        <h3 className="text-slate-700 font-semibold  mb-3 dark:text-slate-200">
-                            표본 정보
-                        </h3>
-                        <LabelText label="ID" value={selectedSpecimenInfo?.coll_id}/>
-                        <LabelText label="타입" value={selectedSpecimenInfo?.type}/>
-                        <LabelText label="채집일" value={selectedSpecimenInfo?.coll_date}/>
-                        <LabelText label="채집자" value={selectedSpecimenInfo?.collector_name}/>
-                        <LabelText label="위치" value={selectedSpecimenInfo?.location}/>
-                        <LabelText label="기주" value={selectedSpecimenInfo?.host}/>
-                        <LabelText label="DNA Identified" value={selectedSpecimenInfo?.dna_identified}/>
-                        <LabelText label="DNA Accession No." value={selectedSpecimenInfo?.dna_accession_no}/>
-
+                        <div className={"space-y-2"}>
+                            <h3 className="text-slate-700 font-semibold  mb-3 dark:text-slate-200">
+                                표본 정보
+                            </h3>
+                            <LabelText label="ID" value={selectedSpecimenInfo?.coll_id}/>
+                            <LabelText label="Type" value={selectedSpecimenInfo?.type}/>
+                            <LabelText label="Coll. Date" value={selectedSpecimenInfo?.coll_date}/>
+                            <LabelText label="Collector" value={selectedSpecimenInfo?.collector_name}/>
+                            <LabelText label="Location" value={selectedSpecimenInfo?.location}/>
+                            <LabelText label="Host" value={selectedSpecimenInfo?.host}/>
+                            <LabelText label="DNA Identified" value={selectedSpecimenInfo?.dna_identified}/>
+                            <LabelText label="DNA Accession No." value={selectedSpecimenInfo?.dna_accession_no}/>
+                        </div>
                     </div>
                 </div>
 
