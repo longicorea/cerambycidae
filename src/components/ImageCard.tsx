@@ -7,7 +7,7 @@ const BadgeColor = {
     A: "bg-yellow-400",
     L: "bg-emerald-400",
     P: "bg-blue-400",
-    D: "bg-gray-100",
+    D: "bg-gray-100 dark:bg-gray-600",
 }
 
 function SpecimenImage({imageUrl, alt}: { imageUrl: string | undefined; alt?: string }) {
@@ -15,8 +15,8 @@ function SpecimenImage({imageUrl, alt}: { imageUrl: string | undefined; alt?: st
 
     if (!imageUrl) {
         return (
-            <div className="w-full h-full bg-slate-50 rounded flex items-center justify-center">
-                <span className="text-gray-500 text-sm">No Image</span>
+            <div className="w-full h-full bg-slate-50 dark:bg-gray-700 rounded flex items-center justify-center">
+                <span className="text-gray-500 dark:text-gray-400 text-sm">No Image</span>
             </div>
         );
     }
@@ -49,7 +49,7 @@ export function ImageCard({
     return (
         <Link
             href={href}
-            className="block bg-slate-50 rounded-lg hover:bg-gray-100  overflow-hidden min-w-[280px] max-w-[280px]  transform hover:scale-105 transition-transform duration-300 ease-in-out"
+            className="block bg-slate-50 dark:bg-slate-900/30 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 overflow-hidden min-w-[280px] max-w-[280px] transform hover:scale-105 transition-transform duration-300 ease-in-out"
         >
             <div className="flex flex-col space-y-2 justify-end items-center p-4 rounded-2xl h-96 min-w-[280px] ">
                 <div className="relative grid grid-cols-1 gap-3 h-96 overflow-hidden w-full">
@@ -80,7 +80,7 @@ export function ImageCard({
 
                 {/* 설명 */}
                 <div
-                    className="w-full justify-center items-start text-gray-600 text-lg text-nowrap text-ellipsis overflow-hidden">
+                    className="w-full flex justify-center text-gray-600 dark:text-gray-300 text-lg text-nowrap text-ellipsis overflow-hidden">
                   <span>
                     <i>{description}</i>
                   </span>

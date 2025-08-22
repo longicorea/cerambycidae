@@ -72,7 +72,7 @@ export default function AutocompleteSearch({
                 .sort((a, b) => b[1] - a[1])
                 .map(([suggestion]) => suggestion)
                 .slice(0, 8);
-       
+
             setSuggestions(filteredSuggestions);
             setShowSuggestions(filteredSuggestions.length > 0);
             setSelectedIndex(-1);
@@ -157,7 +157,7 @@ export default function AutocompleteSearch({
                 onFocus={handleInputFocus}
                 onBlur={handleInputBlur}
                 placeholder={placeholder}
-                className="shadow-[0px_0px_20px_2px_#dfe5ed] rounded-full h-14 w-full text-[26px] font-light px-6 text-gray-600 placeholder:font-thin placeholder:text-base focus:outline-none focus:border-inherit focus:ring-0"
+                className="shadow-[0px_0px_20px_2px_#dfe5ed] dark:shadow-none rounded-full h-14 w-full text-[26px] font-light px-6 text-gray-600 placeholder:font-thin placeholder:text-base focus:outline-none focus:border-inherit focus:ring-0"
             />
             <When condition={showSuggestions && suggestions.length > 0}>
                 <div

@@ -13,9 +13,9 @@ import Image from "next/image";
 function LabelText({label, value}: { label: string, value: string | number }) {
     return (
         <div className={"grid grid-cols-4 items-center space-x-2"}>
-            <span className={"col-span-2 w-20 text-slate-700 font-medium"}>{label}</span>
+            <span className={"col-span-2 w-20 text-slate-700 font-medium dark:text-slate-300"}>{label}</span>
             <span
-                className={"col-span-2 font-light text-slate-600 text-sm overflow-hidden text-nowrap text-ellipsis"}>{value}</span>
+                className={"col-span-2 font-light text-slate-600 text-sm overflow-hidden text-nowrap text-ellipsis dark:text-slate-300"}>{value}</span>
         </div>
     )
 }
@@ -91,7 +91,7 @@ export default function SpeciesPage({params}: {
                 <div className={"flex flex-row  space-x-8"}>
                     <div className={"flex flex-row space-x-4 min-h-[900px] min-w-[1000px]"}>
                         <div
-                            className={"w-full h-full border border-gray-300 rounded-md overflow-hidden max-w-[1000px]"}>
+                            className={"w-full h-full border border-gray-300 rounded-md overflow-hidden max-w-[1000px] dark:border-gray-900"}>
                             <TransformWrapper
                                 initialScale={1}
                                 minScale={1}
@@ -124,7 +124,7 @@ export default function SpeciesPage({params}: {
                                     <button
                                         key={index}
                                         onClick={() => setSelectedSpecimenImageIndex(index)}
-                                        className={`inline-block p-1 border rounded ${selectedSpecimenImageIndex === index ? 'bg-blue-300' : 'bg-white'}`}
+                                        className={`inline-block p-[1px] border dark:border-gray-900 rounded ${selectedSpecimenImageIndex === index ? 'bg-blue-300 dark:bg-gray-600' : 'bg-white dark:bg-gray-900'} hover:bg-blue-200 dark:hover:bg-gray-600 transition-colors duration-200`}
                                     >
                                         <Image src={imageInfo.imageUrl}
                                                alt={`${imageInfo.genus_name} ${imageInfo.species_name} 이미지`}
@@ -138,7 +138,7 @@ export default function SpeciesPage({params}: {
 
 
                     <div className="space-y-2 min-w-[250px]">
-                        <h3 className="text-slate-700 font-semibold  mb-3">
+                        <h3 className="text-slate-700 font-semibold  mb-3 dark:text-slate-200">
                             표본 정보
                         </h3>
                         <LabelText label="ID" value={selectedSpecimenInfo?.coll_id}/>
