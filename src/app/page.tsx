@@ -72,7 +72,7 @@ export default function HomePage() {
         if (!searchText) {
             // 검색어가 없을 경우 랜덤 20개
             return _.chain(collData)
-                .sampleSize(20)
+                .sampleSize(40)
                 .groupBy(item => `${item.genus_name} ${item.species_name}`.trim())
                 .map((items, key) => ({
                     genus_name: items[0]!.genus_name,
