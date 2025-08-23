@@ -104,10 +104,7 @@ export default function SpeciesPage({params}: {
 
                             >
                                 {({zoomIn, zoomOut, resetTransform}) => (
-
-
                                     <div className="flex-1 relative">
-
                                         <TransformComponent wrapperClass="w-full h-full">
                                             <img
                                                 src={selectedSpecimenInfo?.imageUrl ?? ''}
