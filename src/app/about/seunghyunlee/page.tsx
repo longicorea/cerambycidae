@@ -1,6 +1,6 @@
 export default function SeunghyunLeePage() {
     return (
-        <div className="min-h-screen bg-white dark:bg-gray-900">
+        <div className="min-h-screen bg-white dark:bg-slate-950">
             <div className="max-w-4xl mx-auto px-4 py-8">
                 <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-8">
                     <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-6">Seunghyun Lee (이승현)</h1>
@@ -16,7 +16,8 @@ export default function SeunghyunLeePage() {
                                     approaches with modern molecular techniques.
                                 </p>
 
-                                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">Research Interests</h3>
+                                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">Research
+                                    Interests</h3>
                                 <ul className="list-disc list-inside space-y-2 text-gray-700 dark:text-gray-300 mb-6">
                                     <li>Taxonomic study of Cerambycidae larvae and pupae</li>
                                     <li>DNA barcoding for species identification</li>
@@ -42,7 +43,8 @@ export default function SeunghyunLeePage() {
                         </div>
 
                         <div className="bg-blue-50 dark:bg-blue-900/20 rounded-lg p-6 mb-8">
-                            <h3 className="text-lg font-semibold text-blue-900 dark:text-blue-300 mb-2">Education & Background</h3>
+                            <h3 className="text-lg font-semibold text-blue-900 dark:text-blue-300 mb-2">Education &
+                                Background</h3>
                             <div className="text-blue-800 dark:text-blue-200 space-y-2">
                                 <p><strong>Current:</strong> Graduate Student in Entomology, Seoul National University
                                 </p>
@@ -54,7 +56,8 @@ export default function SeunghyunLeePage() {
                         </div>
 
                         <div className="bg-green-50 dark:bg-green-900/20 rounded-lg p-6 mb-8">
-                            <h3 className="text-lg font-semibold text-green-900 dark:text-green-300 mb-2">LongiHUB Project</h3>
+                            <h3 className="text-lg font-semibold text-green-900 dark:text-green-300 mb-2">LongiHUB
+                                Project</h3>
                             <p className="text-green-800 dark:text-green-200">
                                 As the founder and principal investigator of LongiHUB, I lead the collection,
                                 identification,
@@ -67,7 +70,8 @@ export default function SeunghyunLeePage() {
 
                         <div className="grid md:grid-cols-1 gap-6">
                             <div>
-                                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">Research Contributions</h3>
+                                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">Research
+                                    Contributions</h3>
                                 <ul className="space-y-2 text-gray-700 dark:text-gray-300">
                                     <li>• Development of integrated morphological-molecular approach for larval
                                         identification

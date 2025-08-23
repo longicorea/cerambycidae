@@ -21,7 +21,7 @@ export default function ContributorsPage() {
     ];
 
     return (
-        <div className="min-h-screen bg-white dark:bg-gray-900">
+        <div className="min-h-screen bg-white dark:bg-slate-950">
             <div className="max-w-6xl mx-auto px-4 py-8">
                 <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-8">
                     <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-6">Contributors</h1>
@@ -49,7 +49,8 @@ export default function ContributorsPage() {
                                                 Contributions</h3>
                                             <ul className="list-disc list-inside space-y-1">
                                                 {contributor.contributions.map((contribution, idx) => (
-                                                    <li key={idx} className="text-gray-700 dark:text-gray-300">{contribution}</li>
+                                                    <li key={idx}
+                                                        className="text-gray-700 dark:text-gray-300">{contribution}</li>
                                                 ))}
                                             </ul>
                                         </div>
@@ -61,7 +62,8 @@ export default function ContributorsPage() {
 
 
                     <div className="bg-green-50 dark:bg-green-900/20 rounded-lg p-6">
-                        <h2 className="text-xl font-semibold text-green-900 dark:text-green-300 mb-3">How to Contribute</h2>
+                        <h2 className="text-xl font-semibold text-green-900 dark:text-green-300 mb-3">How to
+                            Contribute</h2>
                         <p className="text-green-800 dark:text-green-200 mb-4">
                             We welcome contributions to the LongiHUB project in various forms.
                             Whether you have entomological expertise, development skills, or data management experience,

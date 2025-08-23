@@ -1,6 +1,6 @@
 export default function OthersPage() {
     return (
-        <div className="min-h-screen bg-white dark:bg-gray-900">
+        <div className="min-h-screen bg-white dark:bg-slate-950">
             <div className="max-w-7xl mx-auto px-4 py-8">
                 <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-8">
                     <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-6">Others</h1>
@@ -13,7 +13,8 @@ export default function OthersPage() {
                         </p>
 
                         <div className="bg-sky-50 dark:bg-sky-900/20 rounded-lg p-6 mb-8">
-                            <h2 className="text-2xl font-semibold text-sky-900 dark:text-sky-300 mb-3">Cerambycid breeding – pupae to adults
+                            <h2 className="text-2xl font-semibold text-sky-900 dark:text-sky-300 mb-3">Cerambycid
+                                breeding – pupae to adults
                             </h2>
                             <p className="text-sky-800 dark:text-sky-200 mb-4">
                                 Laboratory breeding studies documenting the transition from pupal to adult stage
@@ -45,7 +46,8 @@ export default function OthersPage() {
                         </div>
 
                         <div className="bg-violet-50 dark:bg-violet-900/20 rounded-lg p-6 mb-8">
-                            <h2 className="text-2xl font-semibold text-violet-900 dark:text-violet-300 mb-3">Cerambycid breeding – larvae to pupae
+                            <h2 className="text-2xl font-semibold text-violet-900 dark:text-violet-300 mb-3">Cerambycid
+                                breeding – larvae to pupae
                             </h2>
                             <p className="text-violet-800 dark:text-violet-200 mb-4">
                                 Documentation of larval to pupal transformation in laboratory conditions
@@ -81,7 +83,8 @@ export default function OthersPage() {
                         </div>
 
                         <div className="bg-red-50 dark:bg-red-900/20 rounded-lg p-6 mb-8">
-                            <h2 className="text-2xl font-semibold text-red-900 dark:text-red-300 mb-3">Natural enemies of cerambycids – Hymenopteran parasitoids
+                            <h2 className="text-2xl font-semibold text-red-900 dark:text-red-300 mb-3">Natural enemies
+                                of cerambycids – Hymenopteran parasitoids
                             </h2>
                             <p className="text-red-800 dark:text-red-200 mb-4">
                                 Hymenopteran parasitoids targeting various life stages of longhorn beetles
@@ -119,10 +122,12 @@ export default function OthersPage() {
                         </div>
 
                         <div className="bg-amber-50 dark:bg-amber-900/20 rounded-lg p-6 mb-8">
-                            <h2 className="text-2xl font-semibold text-amber-900 dark:text-amber-300 mb-3">Natural enemies of cerambycids – Others
+                            <h2 className="text-2xl font-semibold text-amber-900 dark:text-amber-300 mb-3">Natural
+                                enemies of cerambycids – Others
                             </h2>
                             <p className="text-amber-800 dark:text-amber-200 mb-4">
-                                Non-hymenopteran natural enemies including dipterans, birds, fungi, and predatory beetles
+                                Non-hymenopteran natural enemies including dipterans, birds, fungi, and predatory
+                                beetles
                             </p>
                             <img
                                 src="https://my-cdn-worker.longicorea.workers.dev/images/biology/others/STP3F21.webp"
@@ -155,18 +160,24 @@ export default function OthersPage() {
                         </div>
 
                         <div className="bg-teal-50 dark:bg-teal-900/20 rounded-lg p-6 mb-8">
-                            <h2 className="text-xl font-semibold text-teal-900 dark:text-teal-300 mb-3">Research Applications</h2>
+                            <h2 className="text-xl font-semibold text-teal-900 dark:text-teal-300 mb-3">Research
+                                Applications</h2>
                             <div className="text-teal-800 dark:text-teal-200 space-y-2">
-                                <p><strong>Biological Control:</strong> Understanding natural enemy relationships for sustainable pest management</p>
-                                <p><strong>Laboratory Breeding:</strong> Techniques for maintaining cerambycid cultures for research purposes</p>
-                                <p><strong>Ecological Interactions:</strong> Documentation of predator-prey and host-parasitoid relationships</p>
+                                <p><strong>Biological Control:</strong> Understanding natural enemy relationships for
+                                    sustainable pest management</p>
+                                <p><strong>Laboratory Breeding:</strong> Techniques for maintaining cerambycid cultures
+                                    for research purposes</p>
+                                <p><strong>Ecological Interactions:</strong> Documentation of predator-prey and
+                                    host-parasitoid relationships</p>
                             </div>
                         </div>
 
                         <div className="bg-gray-50 dark:bg-gray-700/50 rounded-lg p-6">
-                            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">Conservation Implications</h3>
+                            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">Conservation
+                                Implications</h3>
                             <p className="text-gray-700 dark:text-gray-300">
-                                This research provides crucial insights into cerambycid ecology, natural control mechanisms,
+                                This research provides crucial insights into cerambycid ecology, natural control
+                                mechanisms,
                                 and breeding biology essential for forest health monitoring, conservation strategies,
                                 and sustainable pest management programs.
                             </p>

@@ -1,6 +1,6 @@
 export default function LarvaPage() {
     return (
-        <div className="min-h-screen bg-white dark:bg-gray-900">
+        <div className="min-h-screen bg-white dark:bg-slate-950">
             <div className="max-w-7xl mx-auto px-4 py-8">
                 <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-8">
                     <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-6">Larva</h1>
@@ -229,7 +229,7 @@ export default function LarvaPage() {
                             </div>
                         </div>
 
-                        
+
                     </div>
                 </div>
             </div>
