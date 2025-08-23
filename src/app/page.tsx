@@ -135,40 +135,42 @@ export default function HomePage() {
 
     return (
         <DefaultSection>
-            <div className={"flex justify-center py-8 my-8 mb-16 "}>
-                <AutocompleteSearch
-                    collData={collData}
-                    onSearch={setSearchText}
-                    placeholder="Search by taxonomy or Korean name."
-                    className="w-1/2 max-w-[800px]"
-                />
+            <div>
+                <div className={"flex justify-center py-8 my-8 mb-16 "}>
+                    <AutocompleteSearch
+                        collData={collData}
+                        onSearch={setSearchText}
+                        placeholder="Search by taxonomy or Korean name."
+                        className="w-1/2 max-w-[800px]"
+                    />
+                </div>
+                <div className={"flex flex-wrap gap-4 justify-center max-h-[1000px] overflow-y-scroll"}>
+                    <For of={dataList}>
+                        {(data) => {
+                            const imageFiles = data.items.flatMap(item => item.imageFiles ?? []);
+                            const dnaIdentified = data.items.some(item => item.dna_identified === "TRUE");
+                            const familyName = data.items[0]?.family_name || "";
+                            const subfamilyName = data.items[0]?.subfamily_name || "";
+                            const genusName = data.items[0]?.genus_name || "";
+                            const speciesName = data.items[0]?.species_name || "";
+                            const typeSet = new Set(imageFiles.map((img => img.name.split('_')[1])))
+                            const thumbnailList = imageFiles.filter((img) => img.name.includes("thumbnail"))
+                            if (dnaIdentified) {
+                                typeSet.add("D");
+                            }
+                            const types = Array.from(typeSet).filter(Boolean);
+                            return (
+                                <ImageCard
+                                    href={`/explore/${encodeURIComponent(familyName)}/${encodeURIComponent(subfamilyName)}/${encodeURIComponent(genusName)}/${encodeURIComponent(speciesName)}`}
+                                    imageUrl={getPreferredImageUrl(thumbnailList)}
+                                    description={data.genus_name + " " + data.species_name}
+                                    badge={types ?? []}/>
+                            )
+                        }}
+                    </For>
+                </div>
             </div>
-            <div className={"flex flex-wrap gap-4 justify-center max-h-[1000px] overflow-y-scroll"}>
-                <For of={dataList}>
-                    {(data) => {
-                        const imageFiles = data.items.flatMap(item => item.imageFiles ?? []);
-                        const dnaIdentified = data.items.some(item => item.dna_identified === "TRUE");
-                        const familyName = data.items[0]?.family_name || "";
-                        const subfamilyName = data.items[0]?.subfamily_name || "";
-                        const genusName = data.items[0]?.genus_name || "";
-                        const speciesName = data.items[0]?.species_name || "";
-                        const typeSet = new Set(imageFiles.map((img => img.name.split('_')[1])))
-                        const thumbnailList = imageFiles.filter((img) => img.name.includes("thumbnail"))
-                        if (dnaIdentified) {
-                            typeSet.add("D");
-                        }
-                        const types = Array.from(typeSet).filter(Boolean);
-                        return (
-                            <ImageCard
-                                href={`/explore/${encodeURIComponent(familyName)}/${encodeURIComponent(subfamilyName)}/${encodeURIComponent(genusName)}/${encodeURIComponent(speciesName)}`}
-                                imageUrl={getPreferredImageUrl(thumbnailList)}
-                                description={data.genus_name + " " + data.species_name}
-                                badge={types ?? []}/>
-                        )
-                    }}
-                </For>
-            </div>
-
+            
         </DefaultSection>
     )
 }

@@ -13,9 +13,9 @@ import Image from "next/image";
 function LabelText({label, value}: { label: string, value: string | number }) {
     return (
         <div className={"grid grid-cols-4 items-center space-x-2 hover:bg-slate-800"}>
-            <span className={"col-span-2 w-20 text-slate-700 font-medium dark:text-slate-300"}>{label}</span>
+            <span className={"col-span-2 w-20 text-slate-700 font-medium text-2xl dark:text-slate-300"}>{label}</span>
             <span
-                className={"col-span-2 font-light text-slate-600 text-sm overflow-hidden text-nowrap text-ellipsis dark:text-slate-300"}>{value}</span>
+                className={"col-span-2 font-light text-2xl text-slate-600  overflow-hidden text-nowrap text-ellipsis dark:text-slate-300"}>{value}</span>
         </div>
     )
 }
@@ -84,7 +84,8 @@ export default function SpeciesPage({params}: {
     const selectedSpecimenInfo = useMemo(() => speciesImageInfo[selectedSpecimenImageIndex]!, [speciesImageInfo, selectedSpecimenImageIndex]);
     return (
         <DefaultSection>
-            <div className="py-4">
+
+            <div className="py-4 w-[1280px] max-w-[1280px] min-w-[1280px]">
                 <Breadcrumb familyName={familyName} subfamilyName={subfamilyName} genusName={genusName}
                             speciesName={speciesName}/>
                 <ExploreTitle title={`${genusName} ${speciesName}`} subtitle={"Species"}/>
@@ -139,16 +140,13 @@ export default function SpeciesPage({params}: {
 
                             </For>
                         </div>
-                        <div className={"space-y-2"}>
-                            <h3 className="text-slate-700 font-semibold  mb-3 dark:text-slate-200">
-                                표본 정보
+                        <div className={"space-y-4"}>
+                            <h3 className="text-slate-700 font-semibold  mb-3 dark:text-slate-200 text-3xl">
+                                Specimen Information
                             </h3>
                             <LabelText label="ID" value={selectedSpecimenInfo?.coll_id}/>
                             <LabelText label="Type" value={selectedSpecimenInfo?.type}/>
-                            <LabelText label="Coll. Date" value={selectedSpecimenInfo?.coll_date}/>
-                            <LabelText label="Collector" value={selectedSpecimenInfo?.collector_name}/>
                             <LabelText label="Location" value={selectedSpecimenInfo?.location}/>
-                            <LabelText label="Host" value={selectedSpecimenInfo?.host}/>
                             <LabelText label="DNA Identified" value={selectedSpecimenInfo?.dna_identified}/>
                             <LabelText label="DNA Accession No." value={selectedSpecimenInfo?.dna_accession_no}/>
                         </div>
@@ -156,6 +154,7 @@ export default function SpeciesPage({params}: {
                 </div>
 
             </div>
+
         </DefaultSection>
     );
 }

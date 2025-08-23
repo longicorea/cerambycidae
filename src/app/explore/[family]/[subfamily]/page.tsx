@@ -81,7 +81,7 @@ export default function SubfamilyPage({params}: { params: { family: string, subf
 
     return (
         <DefaultSection>
-            <div className="py-4">
+            <div className="py-4  w-[1280px] max-w-[1280px] min-w-[1280px]">
                 <Breadcrumb familyName={familyName} subfamilyName={subfamilyName}/>
                 <ExploreTitle title={subfamilyName} subtitle={"Subfamily"}/>
 

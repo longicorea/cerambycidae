@@ -67,7 +67,7 @@ export default function FamilyPage({params}: { params: { family: string } }) {
 
     return (
         <DefaultSection>
-            <div className="py-4">
+            <div className="py-4  w-[1280px] max-w-[1280px] min-w-[1280px]">
                 <Breadcrumb familyName={familyName}/>
                 <ExploreTitle title={familyName} subtitle={"family"}/>
 

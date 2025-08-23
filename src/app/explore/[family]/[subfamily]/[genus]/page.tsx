@@ -102,7 +102,7 @@ export default function GenusPage({params}: { params: { family: string, subfamil
 
     return (
         <DefaultSection>
-            <div className="py-4">
+            <div className="py-4  w-[1280px] max-w-[1280px] min-w-[1280px]">
                 <Breadcrumb familyName={familyName} subfamilyName={subfamilyName} genusName={genusName}/>
                 <ExploreTitle title={genusName} subtitle={"Genus"}/>
 

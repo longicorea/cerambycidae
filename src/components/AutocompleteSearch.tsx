@@ -157,7 +157,7 @@ export default function AutocompleteSearch({
                 onFocus={handleInputFocus}
                 onBlur={handleInputBlur}
                 placeholder={placeholder}
-                className="shadow-[0px_0px_20px_2px_#dfe5ed] dark:shadow-none rounded-full h-14 w-full text-[26px] font-light px-6 text-gray-600 placeholder:font-thin placeholder:text-base focus:outline-none focus:border-inherit focus:ring-0"
+                className="shadow-[0px_0px_20px_2px_#dfe5ed] dark:shadow-none rounded-full h-14 w-full text-[26px] font-light px-6 text-gray-600 placeholder:font-thin  focus:outline-none focus:border-inherit focus:ring-0 dark:bg-slate-800 placeholder:text-2xl placeholder:text-white dark:text-white"
             />
             <When condition={showSuggestions && suggestions.length > 0}>
                 <div
