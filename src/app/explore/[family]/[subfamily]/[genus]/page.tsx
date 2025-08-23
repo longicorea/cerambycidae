@@ -73,7 +73,7 @@ export default function GenusPage({params}: { params: { family: string, subfamil
                 if (!type) return null;
                 return type
             }))
-            const isDna = species.specimens.some((item => item.dna_identified));
+            const isDna = species.specimens.some((item => item.dna_identified === "TRUE"));
 
             if (isDna) {
                 typeList.add("D");
@@ -112,7 +112,7 @@ export default function GenusPage({params}: { params: { family: string, subfamil
                             const speciesData = speciesGroups[speciesKey.speciesName]!;
                             const firstItem = speciesData[0]!;
                             const speciesName = firstItem.genus_name + ' ' + firstItem.species_name + (firstItem.subspecies_name ? ` ${firstItem.subspecies_name}` : '');
-
+                            console.log(speciesKey)
                             return (
                                 <ImageCard
                                     href={`/explore/${encodeURIComponent(familyName)}/${encodeURIComponent(subfamilyName)}/${encodeURIComponent(genusName)}/${encodeURIComponent(speciesKey.speciesName)}`}

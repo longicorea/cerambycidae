@@ -47,6 +47,20 @@ export default function Navigation() {
                                 </div>
                             </div>
                         </div>
+                        <div className="relative group">
+                            <MenuLink targetUrl={"/biology"} label="Biology"/>
+                            <div
+                                className="absolute left-0 top-full mt-1 w-48 bg-white dark:bg-gray-800 shadow-lg rounded-md opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-10 border border-gray-200 dark:border-gray-700">
+                                <div className="py-2">
+                                    <Link href="/biology/larva"
+                                          className="block px-4 py-2 text-sm text-slate-600 dark:text-slate-300 hover:text-slate-800 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-gray-700">Larva</Link>
+                                    <Link href="/biology/pupa"
+                                          className="block px-4 py-2 text-sm text-slate-600 dark:text-slate-300 hover:text-slate-800 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-gray-700">Pupa</Link>
+                                    <Link href="/biology/others"
+                                          className="block px-4 py-2 text-sm text-slate-600 dark:text-slate-300 hover:text-slate-800 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-gray-700">Others</Link>
+                                </div>
+                            </div>
+                        </div>
                         <MenuLink targetUrl={"/explore"} label={"Explore"}/>
                         <ThemeToggle/>
                     </div>
