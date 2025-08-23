@@ -25,7 +25,7 @@ function SpecimenImage({imageUrl, alt}: { imageUrl: string | undefined; alt?: st
         <Image
             src={imageUrl}
             alt={alt ?? 'Specimen Image'}
-            className="w-full h-full object-cover rounded"
+            className="w-full h-full object-contain rounded"
             onError={(e) => {
                 (e.target as HTMLImageElement).style.display = 'none';
             }}
@@ -51,12 +51,13 @@ export function ImageCard({
             href={href}
             className="block bg-slate-50 dark:bg-slate-900/30 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 overflow-hidden min-w-[280px] max-w-[280px] transform hover:scale-105 transition-transform duration-300 ease-in-out"
         >
-            <div className="flex flex-col space-y-2 justify-end items-center p-4 rounded-2xl h-96 min-w-[280px] ">
-                <div className="relative grid grid-cols-1 gap-3 h-96 overflow-hidden w-full">
+            <div
+                className="flex flex-col space-y-2 justify-end items-center px-0 py-4 rounded-2xl h-[430px]  min-w-[280px] ">
+                <div className="relative grid grid-cols-1 gap-3 h-[430px] overflow-hidden w-full">
                     <SpecimenImage imageUrl={imageUrl}/>
 
                     {badge.length > 0 && (
-                        <div className="absolute bottom-3 right-3 flex gap-1 z-10">
+                        <div className="absolute bottom-2 right-7 flex gap-1 z-10">
                             {badge.filter(b => !!b).map((b, idx) => (
                                 <div
                                     key={idx}
