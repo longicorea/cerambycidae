@@ -6,11 +6,6 @@ export default function OthersPage() {
                     <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-6">Others</h1>
 
                     <div className="prose prose-lg max-w-none">
-                        <p className="text-lg text-gray-700 dark:text-gray-300 mb-8">
-                            Beyond larval and pupal stages, our research encompasses additional biological
-                            aspects of longhorn beetles including breeding studies, natural enemies,
-                            and ecological relationships.
-                        </p>
 
                         <div className="bg-sky-50 dark:bg-sky-900/20 rounded-lg p-6 mb-8">
                             <h2 className="text-2xl font-semibold text-sky-900 dark:text-sky-300 mb-3">Cerambycid

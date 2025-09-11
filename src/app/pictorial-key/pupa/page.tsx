@@ -6,11 +6,7 @@ export default function PictorialKeyPupaePage() {
                     <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-6">Pictorial Key - Pupae</h1>
 
                     <div className="prose prose-lg max-w-none">
-                        <p className="text-lg text-gray-700 dark:text-gray-300 mb-8">
-                            Interactive pictorial identification key for longhorn beetle pupae. This visual guide
-                            helps identify cerambycid pupae using morphological characteristics and distinctive
-                            features unique to the pupal stage.
-                        </p>
+
 
                         <div className="bg-slate-50 dark:bg-slate-900/20 rounded-lg p-6 mb-8">
                             <h2 className="text-2xl font-semibold text-slate-900 dark:text-slate-300 mb-3">Key Features
@@ -28,7 +24,7 @@ export default function PictorialKeyPupaePage() {
 
                         </div>
 
-                        
+
                     </div>
                 </div>
             </div>

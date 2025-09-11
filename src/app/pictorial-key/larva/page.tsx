@@ -6,11 +6,7 @@ export default function PictorialKeyLarvaePage() {
                     <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-6">Pictorial Key - Larvae</h1>
 
                     <div className="prose prose-lg max-w-none">
-                        <p className="text-lg text-gray-700 dark:text-gray-300 mb-8">
-                            Interactive pictorial identification key for longhorn beetle larvae. Use the visual
-                            characteristics and diagnostic features below to identify cerambycid larvae to subfamily
-                            and species level.
-                        </p>
+
 
                         <div className="bg-slate-50 dark:bg-slate-900/20 rounded-lg p-6 mb-8">
                             <h2 className="text-2xl font-semibold text-slate-900 dark:text-slate-300 mb-3">Key Features
@@ -29,7 +25,7 @@ export default function PictorialKeyLarvaePage() {
 
                         </div>
 
-                        
+
                     </div>
                 </div>
             </div>

@@ -6,11 +6,6 @@ export default function MorphologyPupaPage() {
                     <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-6">Pupal Morphology</h1>
 
                     <div className="prose prose-lg max-w-none">
-                        <p className="text-lg text-gray-700 dark:text-gray-300 mb-8">
-                            Pupal morphology represents the transitional stage between larva and adult, offering
-                            unique diagnostic features for cerambycid identification. Our studies document
-                            species-specific pupal characteristics essential for taxonomic research.
-                        </p>
 
                         <div className="bg-pink-50 dark:bg-pink-900/20 rounded-lg p-6 mb-8">
                             <h2 className="text-2xl font-semibold text-pink-900 dark:text-pink-300 mb-3">Sexual

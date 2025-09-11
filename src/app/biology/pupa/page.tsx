@@ -6,13 +6,6 @@ export default function PupaPage() {
                     <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-6">Pupa</h1>
 
                     <div className="prose prose-lg max-w-none">
-                        <p className="text-lg text-gray-700 dark:text-gray-300 mb-8">
-                            The pupal stage represents the metamorphic transition from larva to adult in longhorn
-                            beetles.
-                            Our collection provides detailed documentation of pupal morphology and development
-                            across various Cerambycidae species.
-                        </p>
-
                         <div className="bg-cyan-50 dark:bg-cyan-900/20 rounded-lg p-6 mb-8">
                             <h2 className="text-2xl font-semibold text-cyan-900 dark:text-cyan-300 mb-3">Pupal cells of
                                 Cerambycidae

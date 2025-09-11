@@ -6,11 +6,6 @@ export default function LarvaPage() {
                     <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-6">Larva</h1>
 
                     <div className="prose prose-lg max-w-none">
-                        <p className="text-lg text-gray-700 dark:text-gray-300 mb-8">
-                            The larval stage of longhorn beetles represents a critical phase in their life cycle.
-                            Our collection features detailed morphological studies and identification resources
-                            for Cerambycidae larvae.
-                        </p>
 
 
                         <div className="bg-amber-50 dark:bg-amber-900/20 rounded-lg p-6 mb-8">

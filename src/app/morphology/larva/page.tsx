@@ -6,11 +6,6 @@ export default function MorphologyLarvaPage() {
                     <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-6">Larval Morphology</h1>
 
                     <div className="prose prose-lg max-w-none">
-                        <p className="text-lg text-gray-700 dark:text-gray-300 mb-8">
-                            Detailed morphological analysis of longhorn beetle larvae provides essential diagnostic
-                            characters for species identification. Our studies focus on key anatomical features
-                            that distinguish between different cerambycid species and genera.
-                        </p>
 
                         <div className="bg-slate-50 dark:bg-slate-900/20 rounded-lg p-6 mb-8">
                             <h2 className="text-2xl font-semibold text-slate-900 dark:text-slate-300 mb-3">Larval Dorsal
