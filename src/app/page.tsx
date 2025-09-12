@@ -72,8 +72,8 @@ export default function HomePage() {
         if (!searchText) {
             // 검색어가 없을 경우 랜덤 20개
             return _.chain(collData)
-                .sampleSize(40)
                 .groupBy(item => `${item.genus_name} ${item.species_name}`.trim())
+                .sampleSize(40)
                 .map((items, key) => ({
                     genus_name: items[0]!.genus_name,
                     species_name: items[0]!.species_name,
@@ -141,7 +141,7 @@ export default function HomePage() {
                         collData={collData}
                         onSearch={setSearchText}
                         placeholder="Search by taxonomy or Korean name."
-                        className="w-1/2 max-w-[800px]"
+                        className="w-1/2 max-w-[600px] min-w-[600px]"
                     />
                 </div>
                 <div className={"flex flex-wrap gap-4 justify-center max-h-[1000px] overflow-y-scroll"}>
@@ -170,7 +170,7 @@ export default function HomePage() {
                     </For>
                 </div>
             </div>
-            
+
         </DefaultSection>
     )
 }
