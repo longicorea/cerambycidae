@@ -12,10 +12,10 @@ import Image from "next/image";
 
 function LabelText({label, value, valueColor}: { label: string, value: string | number, valueColor?: string }) {
     return (
-        <div className={"grid grid-cols-4 items-center space-x-2 hover:bg-slate-800"}>
-            <span className={"col-span-2 w-20 text-slate-700 font-medium text-2xl dark:text-slate-300"}>{label}</span>
+        <div className={"grid grid-cols-12 items-center space-x-2 hover:bg-slate-800 border-b border-b-gray-500 py-3 "}>
+            <span className={"col-span-4 text-slate-700 font-bold text-2xl dark:text-slate-300"}>{label}</span>
             <span
-                className={"col-span-2 font-light text-2xl text-slate-600  overflow-hidden text-nowrap text-ellipsis dark:text-slate-300"}
+                className={"col-span-8  font-thin text-2xl text-slate-600   dark:text-slate-300"}
                 style={{color: valueColor}}>{value}</span>
         </div>
     )
@@ -138,7 +138,7 @@ export default function SpeciesPage({params}: {
 
                             </For>
                         </div>
-                        <div className={"space-y-4"}>
+                        <div>
                             <h3 className="text-slate-700 font-semibold  mb-3 dark:text-slate-200 text-3xl">
                                 Specimen Information
                             </h3>
