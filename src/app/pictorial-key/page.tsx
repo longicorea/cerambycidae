@@ -7,23 +7,26 @@ export default function PictorialKeyPage() {
 
 
                     <div className="grid md:grid-cols-2 gap-6">
-                        <div
-                            className="border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 rounded-lg p-6 hover:shadow-md transition-shadow">
-                            <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">Larvae</h2>
+                        <a href="/pictorial-key/larva" className="text-blue-600 dark:text-blue-400 ">
+                            <div
+                                className="border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 rounded-lg p-6 hover:shadow-md transition-shadow dark:hover:bg-gray-700">
+                                <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">Larvae</h2>
 
-                            <a href="/pictorial-key/larva" className="text-blue-600 dark:text-blue-400 hover:underline">
+
                                 Use Larval Key →
-                            </a>
-                        </div>
 
-                        <div
-                            className="border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 rounded-lg p-6 hover:shadow-md transition-shadow">
-                            <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">Pupae</h2>
-               
-                            <a href="/pictorial-key/pupa" className="text-blue-600 dark:text-blue-400 hover:underline">
+                            </div>
+                        </a>
+                        <a href="/pictorial-key/pupa" className="text-blue-600 dark:text-blue-400">
+                            <div
+                                className="border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 rounded-lg p-6 hover:shadow-md transition-shadow dark:hover:bg-gray-700">
+                                <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">Pupae</h2>
+
+
                                 Use Pupal Key →
-                            </a>
-                        </div>
+
+                            </div>
+                        </a>
                     </div>
 
 

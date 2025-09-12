@@ -7,36 +7,39 @@ export default function MorphologyPage() {
 
 
                     <div className="grid md:grid-cols-2 gap-6">
-                        <div
-                            className="border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 rounded-lg p-6 hover:shadow-md transition-shadow">
-                            <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">Larva</h2>
-                            <div className={"flex flex-col items-center"}>
-                                <a href="/morphology/larva"
-                                   className="text-blue-600 dark:text-blue-400 hover:underline">
+                        <a href="/morphology/larva"
+                           className="text-blue-600 dark:text-blue-400 ">
+                            <div
+                                className="border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 rounded-lg p-6 hover:shadow-md transition-shadow dark:hover:bg-gray-700">
+                                <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">Larva</h2>
+                                <div className={"flex flex-col items-center"}>
+
                                     <img
                                         src="https://my-cdn-worker.longicorea.workers.dev/images/morphology/!Mor_Larva.webp"
                                         className=" rounded-lg shadow-md max-h-[400px]"
                                     />
 
                                     Explore Larval Morphology →
-                                </a>
-                            </div>
-                        </div>
 
-                        <div
-                            className="border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 rounded-lg p-6 hover:shadow-md transition-shadow">
-                            <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">Pupa</h2>
-                            <div className={"flex flex-col items-center"}>
-                                <a href="/morphology/pupa" className="text-blue-600 dark:text-blue-400 hover:underline">
+                                </div>
+                            </div>
+                        </a>
+                        <a href="/morphology/pupa" className="text-blue-600 dark:text-blue-400">
+                            <div
+                                className="border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 rounded-lg p-6 hover:shadow-md transition-shadow dark:hover:bg-gray-700">
+                                <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">Pupa</h2>
+                                <div className={"flex flex-col items-center"}>
+
                                     <img
                                         src="https://my-cdn-worker.longicorea.workers.dev/images/morphology/!Mor_Pupa.webp"
                                         className="rounded-lg shadow-md max-h-[400px]"
                                     />
 
                                     Explore Pupal Morphology →
-                                </a>
+
+                                </div>
                             </div>
-                        </div>
+                        </a>
                     </div>
 
 

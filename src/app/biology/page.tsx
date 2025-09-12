@@ -7,41 +7,48 @@ export default function BiologyPage() {
 
 
                     <div className="grid md:grid-cols-3 gap-6">
-                        <div
-                            className="border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 rounded-lg p-6 hover:shadow-md transition-shadow">
-                            <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">Larva</h2>
-                            <img
-                                src="https://my-cdn-worker.longicorea.workers.dev/images/biology/!BIO_Lar.webp"
-                                className="w-full h-auto rounded-lg shadow-md"
-                            />
-                            <a href="/biology/larva" className="text-blue-600 dark:text-blue-400 hover:underline">
+                        <a href="/biology/larva" className="text-blue-600 dark:text-blue-400 ">
+                            <div
+                                className="border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 rounded-lg p-6 hover:shadow-md transition-shadow dark:hover:bg-gray-700">
+                                <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">Larva</h2>
+
+                                <img
+                                    src="https://my-cdn-worker.longicorea.workers.dev/images/biology/!BIO_Lar.webp"
+                                    className="w-full h-auto rounded-lg shadow-md"
+                                />
+
                                 Signs & Feeding →
-                            </a>
-                        </div>
 
-                        <div
-                            className="border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 rounded-lg p-6 hover:shadow-md transition-shadow">
-                            <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">Pupa</h2>
-                            <img
-                                src="https://my-cdn-worker.longicorea.workers.dev/images/biology/!BIO_Pup.webp"
-                                className="w-full h-auto rounded-lg shadow-md"
-                            />
-                            <a href="/biology/pupa" className="text-blue-600 dark:text-blue-400 hover:underline">
+                            </div>
+                        </a>
+                        <a href="/biology/pupa" className="text-blue-600 dark:text-blue-400">
+                            <div
+                                className="border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 rounded-lg p-6 hover:shadow-md transition-shadow dark:hover:bg-gray-700">
+                                <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">Pupa</h2>
+
+                                <img
+                                    src="https://my-cdn-worker.longicorea.workers.dev/images/biology/!BIO_Pup.webp"
+                                    className="w-full h-auto rounded-lg shadow-md"
+                                />
+
                                 Signs & Pupal cell →
-                            </a>
-                        </div>
 
-                        <div
-                            className="border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 rounded-lg p-6 hover:shadow-md transition-shadow">
-                            <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">Others</h2>
-                            <img
-                                src="https://my-cdn-worker.longicorea.workers.dev/images/biology/!BIO_Others.webp"
-                                className="w-full h-auto rounded-lg shadow-md"
-                            />
-                            <a href="/biology/others" className="text-blue-600 dark:text-blue-400 hover:underline">
+                            </div>
+                        </a>
+                        <a href="/biology/others" className="text-blue-600 dark:text-blue-400">
+                            <div
+                                className="border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 rounded-lg p-6 hover:shadow-md transition-shadow dark:hover:bg-gray-700">
+                                <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">Others</h2>
+
+                                <img
+                                    src="https://my-cdn-worker.longicorea.workers.dev/images/biology/!BIO_Others.webp"
+                                    className="w-full h-auto rounded-lg shadow-md"
+                                />
+
                                 Breeding & Natural enemies →
-                            </a>
-                        </div>
+
+                            </div>
+                        </a>
                     </div>
                 </div>
             </div>
