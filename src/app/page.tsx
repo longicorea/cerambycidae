@@ -12,7 +12,7 @@ import AutocompleteSearch from "@src/components/AutocompleteSearch";
 import {ImageCard} from "@src/components/ImageCard";
 
 
-const preferredOrder = ["L_dorsal", "P_ventral"];
+const preferredOrder = ["P_ventral", "L_dorsal"];
 
 // normalize 함수: 대소문자 무시 + 구분자 통일
 const normalize = (str: string) =>
