@@ -1,16 +1,17 @@
-// 서버 전용 데이터 캐시
+// 서버 전용 데이터 캐시 - Cloudflare D1 API 버전
 import {CollDataType} from "@src/data/collData";
-import {getCollectionData} from "@src/lib/googleSheets";
-import {isImageCacheExpired, refreshImageCache} from "@src/lib/driveImageServer";
 
 const CACHE_EXPIRY_MS = 60 * 1000; // 1분
+
+// Worker API URL
+const API_BASE_URL = process.env.NEXT_PUBLIC_WORKER_API_URL || "https://cerambycidae-api.longicorea.workers.dev";
 
 interface CacheData {
     data: CollDataType[];
     timestamp: number;
 }
 
-// 전역 캐시 정의 (instrumentation과 API 간 공유)
+// 전역 캐시 정의
 declare global {
     var serverCollectionCache: CacheData | null | undefined;
 }
@@ -24,14 +25,71 @@ function setServerCache(cache: CacheData | null): void {
     globalThis.serverCollectionCache = cache;
 }
 
+// D1 API 응답을 CollDataType으로 변환
+interface ApiSpecimen {
+    id: number;
+    coll_id: string;
+    type: string | null;
+    dna_identified: string | null;
+    dna_accession_no: string | null;
+    seq_identifier: string | null;
+    coll_date: string | null;
+    collector_name: string | null;
+    family_name: string | null;
+    subfamily_name: string | null;
+    tribe_name: string | null;
+    genus_name: string | null;
+    species_name: string | null;
+    subspecies_name: string | null;
+    name_ko: string | null;
+    location: string | null;
+    host: string | null;
+    is_hidden: number;
+    imageFiles: {
+        key: string;
+        size: number;
+        uploaded: string;
+        url: string;
+        name: string;
+    }[];
+}
+
+function transformToCollDataType(specimen: ApiSpecimen): CollDataType {
+    return {
+        id: String(specimen.id),
+        coll_id: specimen.coll_id,
+        type: specimen.type || "",
+        dna_identified: specimen.dna_identified || "",
+        dna_accession_no: specimen.dna_accession_no || "",
+        seq_identifier: specimen.seq_identifier || "",
+        coll_date: specimen.coll_date || "",
+        collector_name: specimen.collector_name || "",
+        family_name: specimen.family_name || "",
+        subfamily_name: specimen.subfamily_name || "",
+        tribe_name: specimen.tribe_name || "",
+        genus_name: specimen.genus_name || "",
+        species_name: specimen.species_name || "",
+        subspecies_name: specimen.subspecies_name || "",
+        name_ko: specimen.name_ko || "",
+        location: specimen.location || "",
+        host: specimen.host || "",
+        is_hidden: specimen.is_hidden === 1,
+        imageFiles: specimen.imageFiles?.map(img => ({
+            key: img.key,
+            size: img.size,
+            uploaded: img.uploaded,
+            url: img.url,
+            name: img.name,
+        })) || [],
+    };
+}
+
 export async function getCachedCollectionData(force: boolean): Promise<CollDataType[]> {
     try {
-        if (isImageCacheExpired() || force) {
-            await refreshImageCache();
-        }
         // 서버사이드 메모리 캐시 확인
         const serverCache = getServerCache();
         console.log('서버 캐시 상태:', serverCache ? '존재' : '없음');
+
         if (serverCache && !force) {
             const now = Date.now();
             if (now - serverCache.timestamp < CACHE_EXPIRY_MS) {
@@ -40,42 +98,32 @@ export async function getCachedCollectionData(force: boolean): Promise<CollDataT
             }
         }
 
-        // 캐시가 없거나 만료되었으면 Google Sheets에서 데이터 가져오기
-        console.log('서버사이드에서 Google Sheets 데이터 새로 가져오기');
+        // 캐시가 없거나 만료되었으면 D1 API에서 데이터 가져오기
+        console.log('D1 API에서 데이터 가져오기...');
 
-        // 기존 캐시 데이터 보존 (이미지 정보가 있는 경우)
-        const oldData = serverCache?.data || [];
-
-        // 서버 전용 모듈에서 데이터 로드
-        const freshData = await getCollectionData();
-
-        // 기존 데이터에서 이미지 정보가 있는 것들을 새 데이터에 병합
-        const mergedData = freshData.map(newItem => {
-            // coll_id로 기존 데이터 찾기
-            const existingItem = oldData.find(oldItem => oldItem.coll_id === newItem.coll_id);
-
-            // 기존 데이터에 이미지 정보가 있으면 유지
-            if (existingItem && existingItem.imageFiles && existingItem.imageFiles.length > 0) {
-                console.log(`이미지 정보 유지: ${newItem.coll_id} (${existingItem.imageFiles.length}개 이미지)`);
-                return {
-                    ...newItem,
-                    imageFiles: existingItem.imageFiles
-                };
-            }
-
-            return newItem;
+        const response = await fetch(`${API_BASE_URL}/api/specimens`, {
+            next: { revalidate: 60 },
         });
+
+        if (!response.ok) {
+            throw new Error(`D1 API 요청 실패: ${response.statusText}`);
+        }
+
+        const apiData: ApiSpecimen[] = await response.json();
+        const freshData = apiData.map(transformToCollDataType);
+
+        console.log(`D1 API에서 ${freshData.length}개 데이터 로드 완료`);
 
         // 서버사이드 메모리에 캐시 저장
         setServerCache({
-            data: mergedData,
+            data: freshData,
             timestamp: Date.now()
         });
 
-        return mergedData;
+        return freshData;
 
     } catch (error) {
-        console.error('서버 데이터 가져오기 실패:', error);
+        console.error('D1 API 데이터 가져오기 실패:', error);
 
         // 에러 발생시 기존 캐시라도 반환
         const serverCache = getServerCache();
@@ -95,7 +143,7 @@ export function clearCollectionDataCache(): void {
     setServerCache(null);
 }
 
-// 서버 캐시 직접 업데이트 함수 (이미지 정보 추가 후 사용)
+// 서버 캐시 직접 업데이트 함수
 export function updateServerCache(data: CollDataType[]): void {
     setServerCache({
         data: data,

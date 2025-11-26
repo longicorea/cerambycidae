@@ -4,6 +4,7 @@ import "./globals.css";
 import Navigation from "@src/components/Navigation";
 import {ThemeProvider} from "@src/contexts/ThemeContext";
 import ThemeScript from "@src/components/ThemeScript";
+import {Providers} from "@src/components/Providers";
 
 const inter = Inter({subsets: ["latin"]});
 
@@ -23,12 +24,14 @@ export default function RootLayout({
             <ThemeScript />
         </head>
         <body className={`${inter.className} bg-white dark:bg-slate-950 text-black dark:text-white transition-colors`}>
+        <Providers>
         <ThemeProvider>
             <Navigation/>
             <div className={"py-0 px-10"}>
                 {children}
             </div>
         </ThemeProvider>
+        </Providers>
         </body>
         </html>
     );

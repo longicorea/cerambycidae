@@ -1,0 +1,21 @@
+name = "cerambycidae-api"
+main = "src/index.ts"
+compatibility_date = "2024-01-01"
+
+# D1 Database 바인딩
+[[d1_databases]]
+binding = "DB"
+database_name = "cerambycidae-db"
+database_id = "fff52156-e5e0-489d-ba9e-e012145f2ad0"
+
+# R2 Bucket 바인딩 (기존 이미지 버킷 연결)
+[[r2_buckets]]
+binding = "R2_BUCKET"
+bucket_name = "immature-db"
+
+# 환경 변수
+[vars]
+ENVIRONMENT = "production"
+
+# CORS 설정을 위한 허용 도메인
+ALLOWED_ORIGINS = "https://longihub.vercel.app,http://localhost:3000"

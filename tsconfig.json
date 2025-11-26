@@ -32,6 +32,6 @@
       }
     ]
   },
-  "exclude": ["node_modules", "**/*.e2e.ts", "cypress"],
+  "exclude": ["node_modules", "**/*.e2e.ts", "cypress", "worker"],
   "include": [ "**/*.ts", "**/*.tsx", "types", ".next/types/**/*.ts"]
 }

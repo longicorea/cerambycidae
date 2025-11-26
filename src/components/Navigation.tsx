@@ -1,6 +1,7 @@
 'use client'
 import Link from "next/link";
 import {usePathname} from "next/navigation";
+import {useSession} from "next-auth/react";
 import ThemeToggle from "./ThemeToggle";
 
 function MenuLink({targetUrl, label}: { targetUrl: string, label: string }) {
@@ -19,6 +20,42 @@ function MenuLink({targetUrl, label}: { targetUrl: string, label: string }) {
         >
             {label}
         </Link>)
+}
+
+function UserButton() {
+    const {data: session, status} = useSession();
+    const isLoggedIn = status === "authenticated" && session?.user;
+
+    return (
+        <Link
+            href={isLoggedIn ? "/admin" : "/login"}
+            className="p-2 rounded-lg text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+            title={isLoggedIn ? "관리자 페이지" : "로그인"}
+        >
+            {isLoggedIn && session.user.image ? (
+                <img
+                    src={session.user.image}
+                    alt=""
+                    className="w-6 h-6 rounded-full"
+                />
+            ) : (
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth={1.5}
+                    stroke="currentColor"
+                    className="w-6 h-6"
+                >
+                    <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z"
+                    />
+                </svg>
+            )}
+        </Link>
+    );
 }
 
 export default function Navigation() {
@@ -87,6 +124,7 @@ export default function Navigation() {
                         </div>
                         <MenuLink targetUrl={"/explore"} label={"Explore"}/>
                         <ThemeToggle/>
+                        <UserButton/>
                     </div>
                 </div>
             </div>

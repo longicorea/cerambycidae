@@ -1,0 +1,17 @@
+{
+  "name": "cerambycidae-api",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "db:create": "wrangler d1 create cerambycidae-db",
+    "db:migrate": "wrangler d1 execute cerambycidae-db --file=./schema.sql",
+    "db:migrate:local": "wrangler d1 execute cerambycidae-db --local --file=./schema.sql"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20240117.0",
+    "typescript": "^5.3.3",
+    "wrangler": "^3.22.1"
+  }
+}
